@@ -1,6 +1,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
+import ImpactCounter from './ImpactCounter';
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -59,20 +60,9 @@ const Hero = () => {
             </button>
           </div>
           
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto animate-fade-up" style={{ animationDelay: '0.8s' }}>
-            <div className="glass p-6 rounded-xl shadow-sm">
-              <div className="text-3xl font-bold text-primary mb-2">1.2K+</div>
-              <div className="text-gray-600">Materials Listed</div>
-            </div>
-            <div className="glass p-6 rounded-xl shadow-sm">
-              <div className="text-3xl font-bold text-primary mb-2">840+</div>
-              <div className="text-gray-600">Successful Exchanges</div>
-            </div>
-            <div className="glass p-6 rounded-xl shadow-sm">
-              <div className="text-3xl font-bold text-primary mb-2">1.5K+</div>
-              <div className="text-gray-600">Tons Recycled</div>
-            </div>
+          {/* Impact Counter */}
+          <div className="max-w-4xl mx-auto mb-12 animate-fade-up" style={{ animationDelay: '0.8s' }}>
+            <ImpactCounter />
           </div>
         </div>
       </div>
