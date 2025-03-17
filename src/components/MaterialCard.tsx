@@ -1,7 +1,11 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { Package, DollarSign, Recycle, Map } from 'lucide-react';
+import { Package, DollarSign, Recycle, Map, Gavel } from 'lucide-react';
+import AuctionBadge from './AuctionBadge';
+import AuctionDetails from './AuctionDetails';
+import { AuctionItem } from '@/types/auction';
+import { useToast } from '@/hooks/use-toast';
 
 type MaterialCardProps = {
   material: {
@@ -14,6 +18,8 @@ type MaterialCardProps = {
     location: string;
     isRecyclable: boolean;
     image: string;
+    isAuction?: boolean;
+    auction?: AuctionItem;
   };
   index: number;
   className?: string;
@@ -22,6 +28,27 @@ type MaterialCardProps = {
 export const MaterialCard = ({ material, index, className }: MaterialCardProps) => {
   // Calculate animation delay based on index for staggered entrance
   const animationDelay = `${0.1 + index * 0.1}s`;
+  const [isAuctionModalOpen, setIsAuctionModalOpen] = useState(false);
+  const { toast } = useToast();
+  
+  const handlePlaceBid = (bidAmount: number) => {
+    if (!material.auction) return;
+    
+    // This would normally call an API to place the bid
+    // For demonstration purposes, we'll just show a toast
+    toast({
+      title: "Bid placed successfully!",
+      description: `You've placed a bid of $${bidAmount.toFixed(2)} on ${material.title}`,
+    });
+    
+    setIsAuctionModalOpen(false);
+  };
+
+  const openAuctionDetails = () => {
+    if (material.isAuction && material.auction) {
+      setIsAuctionModalOpen(true);
+    }
+  };
 
   return (
     <div 
@@ -52,6 +79,16 @@ export const MaterialCard = ({ material, index, className }: MaterialCardProps) 
             </span>
           </div>
         )}
+        
+        {/* Auction Badge */}
+        {material.isAuction && material.auction && (
+          <div className="absolute top-3 left-3">
+            <AuctionBadge 
+              isAuction={true} 
+              endTime={material.auction.endTime} 
+            />
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -66,9 +103,23 @@ export const MaterialCard = ({ material, index, className }: MaterialCardProps) 
         
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center text-primary">
-            <DollarSign className="h-4 w-4 mr-1" />
-            <span className="font-semibold">${material.price}</span>
-            <span className="text-xs text-gray-500 ml-1">/ unit</span>
+            {material.isAuction && material.auction ? (
+              <>
+                <Gavel className="h-4 w-4 mr-1" />
+                <span className="font-semibold">
+                  ${material.auction.currentBid > 0 
+                    ? material.auction.currentBid.toFixed(2) 
+                    : material.auction.startingPrice.toFixed(2)}
+                </span>
+                <span className="text-xs text-gray-500 ml-1">current bid</span>
+              </>
+            ) : (
+              <>
+                <DollarSign className="h-4 w-4 mr-1" />
+                <span className="font-semibold">${material.price}</span>
+                <span className="text-xs text-gray-500 ml-1">/ unit</span>
+              </>
+            )}
           </div>
           
           <div className="flex items-center text-gray-600 text-sm">
@@ -85,13 +136,26 @@ export const MaterialCard = ({ material, index, className }: MaterialCardProps) 
       
       {/* Footer */}
       <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
-        <button className="text-sm font-medium text-primary hover:underline transition-all">
-          View Details
+        <button 
+          className="text-sm font-medium text-primary hover:underline transition-all"
+          onClick={() => material.isAuction ? openAuctionDetails() : null}
+        >
+          {material.isAuction ? "View Auction" : "View Details"}
         </button>
         <button className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors">
-          Contact Seller
+          {material.isAuction ? "Watch Auction" : "Contact Seller"}
         </button>
       </div>
+      
+      {/* Auction Modal */}
+      {material.isAuction && material.auction && (
+        <AuctionDetails 
+          auction={material.auction}
+          onPlaceBid={handlePlaceBid}
+          isOpen={isAuctionModalOpen}
+          onClose={() => setIsAuctionModalOpen(false)}
+        />
+      )}
     </div>
   );
 };

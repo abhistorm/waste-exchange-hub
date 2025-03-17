@@ -1,7 +1,57 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import MaterialCard from './MaterialCard';
-import { Search, Filter, ArrowRight } from 'lucide-react';
+import { Search, Filter, ArrowRight, Tag, Gavel } from 'lucide-react';
+import { AuctionItem } from '@/types/auction';
+
+// Sample auctions data
+const auctionData: AuctionItem[] = [
+  {
+    id: 1,
+    materialId: 3,
+    startingPrice: 0.60,
+    currentBid: 0.75,
+    minBidIncrement: 0.05,
+    endTime: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
+    highestBidderId: 101,
+    bids: [
+      { id: 1, bidderId: 101, bidderName: "Green Recycling Co.", amount: 0.75, timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000) },
+      { id: 2, bidderId: 102, bidderName: "EcoPlastics Inc.", amount: 0.70, timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000) },
+      { id: 3, bidderId: 103, bidderName: "ReuseTech", amount: 0.65, timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000) }
+    ],
+    status: 'active'
+  },
+  {
+    id: 2,
+    materialId: 6,
+    startingPrice: 0.10,
+    currentBid: 0.20,
+    minBidIncrement: 0.02,
+    endTime: new Date(Date.now() + 8 * 60 * 60 * 1000), // 8 hours from now
+    highestBidderId: 105,
+    bids: [
+      { id: 4, bidderId: 105, bidderName: "GlassMasters", amount: 0.20, timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000) },
+      { id: 5, bidderId: 106, bidderName: "ClearCraft", amount: 0.18, timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000) },
+    ],
+    status: 'active'
+  },
+  {
+    id: 3,
+    materialId: 2,
+    startingPrice: 7.50,
+    currentBid: 8.75,
+    minBidIncrement: 0.25,
+    endTime: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000), // 4 days from now
+    highestBidderId: 110,
+    bids: [
+      { id: 6, bidderId: 110, bidderName: "WoodWorks", amount: 8.75, timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000) },
+      { id: 7, bidderId: 111, bidderName: "PalletPro", amount: 8.50, timestamp: new Date(Date.now() - 14 * 60 * 60 * 1000) },
+      { id: 8, bidderId: 112, bidderName: "EcoFurnish", amount: 8.00, timestamp: new Date(Date.now() - 18 * 60 * 60 * 1000) },
+      { id: 9, bidderId: 113, bidderName: "ReclaimCo", amount: 7.75, timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+    ],
+    status: 'active'
+  }
+];
 
 // Sample materials data
 const materialData = [
@@ -14,7 +64,8 @@ const materialData = [
     quantity: "2 tons available",
     location: "Chicago, IL",
     isRecyclable: true,
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81"
+    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
+    isAuction: false
   },
   {
     id: 2,
@@ -25,7 +76,8 @@ const materialData = [
     quantity: "75 units",
     location: "Denver, CO",
     isRecyclable: true,
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
+    isAuction: true
   },
   {
     id: 3,
@@ -36,7 +88,8 @@ const materialData = [
     quantity: "1.5 tons available",
     location: "Atlanta, GA",
     isRecyclable: true,
-    image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b"
+    image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b",
+    isAuction: true
   },
   {
     id: 4,
@@ -47,7 +100,8 @@ const materialData = [
     quantity: "500 lbs available",
     location: "Los Angeles, CA",
     isRecyclable: true,
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81"
+    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
+    isAuction: false
   },
   {
     id: 5,
@@ -58,7 +112,8 @@ const materialData = [
     quantity: "200 lbs available",
     location: "Boston, MA",
     isRecyclable: true,
-    image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b"
+    image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b",
+    isAuction: false
   },
   {
     id: 6,
@@ -69,7 +124,8 @@ const materialData = [
     quantity: "3 tons available",
     location: "Seattle, WA",
     isRecyclable: true,
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
+    isAuction: true
   }
 ];
 
@@ -86,29 +142,59 @@ const categories = [
   "Chemicals"
 ];
 
+// Listing types
+const listingTypes = [
+  "All Listings",
+  "Buy Now",
+  "Auctions"
+];
+
 const MarketplaceSection = () => {
-  const [materials, setMaterials] = useState(materialData);
+  const [materials, setMaterials] = useState([...materialData]);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedListingType, setSelectedListingType] = useState("All Listings");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Filter materials based on search and category
+  // Merge auctions with materials
+  const materialsWithAuctions = useMemo(() => {
+    return materialData.map(material => {
+      if (material.isAuction) {
+        const auctionItem = auctionData.find(auction => auction.materialId === material.id);
+        return { ...material, auction: auctionItem };
+      }
+      return material;
+    });
+  }, []);
+  
+  // Filter materials based on search, category, and listing type
   useEffect(() => {
-    let filtered = materialData;
+    let filtered = materialsWithAuctions;
     
+    // Filter by category
     if (selectedCategory !== "All") {
       filtered = filtered.filter(material => material.category === selectedCategory);
     }
     
+    // Filter by listing type
+    if (selectedListingType === "Buy Now") {
+      filtered = filtered.filter(material => !material.isAuction);
+    } else if (selectedListingType === "Auctions") {
+      filtered = filtered.filter(material => material.isAuction);
+    }
+    
+    // Filter by search query
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(material => 
         material.title.toLowerCase().includes(query) || 
-        material.description.toLowerCase().includes(query)
+        material.description.toLowerCase().includes(query) ||
+        material.category.toLowerCase().includes(query) ||
+        material.location.toLowerCase().includes(query)
       );
     }
     
     setMaterials(filtered);
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, selectedListingType, searchQuery, materialsWithAuctions]);
 
   return (
     <section id="marketplace" className="py-20">
@@ -139,19 +225,36 @@ const MarketplaceSection = () => {
               />
             </div>
             
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Filter className="h-5 w-5 text-gray-400" />
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Filter className="h-5 w-5 text-gray-400" />
+                </div>
+                <select 
+                  className="pl-10 pr-8 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all appearance-none"
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                >
+                  {categories.map((category) => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
               </div>
-              <select 
-                className="pl-10 pr-8 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all appearance-none"
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-              >
-                {categories.map((category) => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
-              </select>
+              
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Tag className="h-5 w-5 text-gray-400" />
+                </div>
+                <select 
+                  className="pl-10 pr-8 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all appearance-none"
+                  value={selectedListingType}
+                  onChange={(e) => setSelectedListingType(e.target.value)}
+                >
+                  {listingTypes.map((type) => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -169,6 +272,7 @@ const MarketplaceSection = () => {
                 className="text-primary hover:underline flex items-center mx-auto"
                 onClick={() => {
                   setSelectedCategory("All");
+                  setSelectedListingType("All Listings");
                   setSearchQuery("");
                 }}
               >

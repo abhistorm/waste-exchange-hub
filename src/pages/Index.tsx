@@ -6,6 +6,10 @@ import MarketplaceSection from '@/components/MarketplaceSection';
 import ProcessSteps from '@/components/ProcessSteps';
 import Benefits from '@/components/Benefits';
 import Footer from '@/components/Footer';
+import CarbonCalculator from '@/components/CarbonCalculator';
+import RecyclingAssistant from '@/components/RecyclingAssistant';
+import { ToastProvider } from '@/components/ui/toast';
+import { Toaster } from '@/components/ui/toaster';
 
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -33,7 +37,18 @@ const Index = () => {
         <Benefits />
       </main>
       
+      {/* Carbon Calculator accessible through a button in footer or elsewhere */}
+      <div className="fixed left-6 bottom-6 z-10">
+        <CarbonCalculator />
+      </div>
+      
+      {/* Recycling Assistant chatbot */}
+      <RecyclingAssistant />
+      
       <Footer />
+      
+      {/* Toast notifications */}
+      <Toaster />
     </div>
   );
 };
