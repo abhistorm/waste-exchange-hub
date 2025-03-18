@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Package, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -11,10 +12,10 @@ const Footer = () => {
           <div>
             <div className="flex items-center mb-4">
               <Package className="h-6 w-6 text-primary mr-2" />
-              <span className="text-white font-semibold text-xl">WasteExchange</span>
+              <span className="text-white font-semibold text-xl">WasteExchange India</span>
             </div>
             <p className="mb-4 text-gray-400">
-              Connecting industries, recyclers, and buyers to create a circular economy for waste materials.
+              Connecting Indian industries, recyclers, and buyers to create a circular economy for waste materials.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-primary transition-colors">
@@ -37,22 +38,22 @@ const Footer = () => {
             <h3 className="text-white font-semibold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-gray-400 hover:text-primary transition-colors">Home</a>
+                <Link to="/" className="text-gray-400 hover:text-primary transition-colors">Home</Link>
               </li>
               <li>
-                <a href="#marketplace" className="text-gray-400 hover:text-primary transition-colors">Marketplace</a>
+                <Link to="/store" className="text-gray-400 hover:text-primary transition-colors">Marketplace</Link>
               </li>
               <li>
-                <a href="#process" className="text-gray-400 hover:text-primary transition-colors">How It Works</a>
+                <a href="/#process" className="text-gray-400 hover:text-primary transition-colors">How It Works</a>
               </li>
               <li>
-                <a href="#benefits" className="text-gray-400 hover:text-primary transition-colors">Benefits</a>
+                <a href="/#benefits" className="text-gray-400 hover:text-primary transition-colors">Benefits</a>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-primary transition-colors">About Us</a>
+                <Link to="/about" className="text-gray-400 hover:text-primary transition-colors">About Us</Link>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-primary transition-colors">Blog</a>
+                <Link to="/blog" className="text-gray-400 hover:text-primary transition-colors">Blog</Link>
               </li>
             </ul>
           </div>
@@ -63,15 +64,15 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 text-primary mr-3 mt-0.5" />
-                <span>123 Recycling Way, Eco City, EC 12345</span>
+                <span>123 Eco Park, Andheri East, Mumbai 400069, India</span>
               </li>
               <li className="flex items-center">
                 <Phone className="h-5 w-5 text-primary mr-3" />
-                <span>+1 (555) 123-4567</span>
+                <span>+91 98765 43210</span>
               </li>
               <li className="flex items-center">
                 <Mail className="h-5 w-5 text-primary mr-3" />
-                <span>info@wasteexchange.com</span>
+                <span>info@wasteexchange.in</span>
               </li>
             </ul>
           </div>
@@ -80,7 +81,7 @@ const Footer = () => {
           <div>
             <h3 className="text-white font-semibold text-lg mb-4">Newsletter</h3>
             <p className="mb-4 text-gray-400">
-              Subscribe to our newsletter for the latest updates on waste management solutions.
+              Subscribe to our newsletter for the latest updates on waste management solutions for Indian industries.
             </p>
             <form className="flex flex-col sm:flex-row gap-2">
               <input 
@@ -100,7 +101,7 @@ const Footer = () => {
         
         {/* Bottom Section */}
         <div className="pt-8 border-t border-gray-800 text-center sm:flex sm:justify-between sm:text-left">
-          <p>&copy; {new Date().getFullYear()} WasteExchange. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} WasteExchange India. All rights reserved.</p>
           <div className="mt-4 sm:mt-0 space-x-6">
             <a href="#" className="text-gray-400 hover:text-primary transition-colors">Privacy Policy</a>
             <a href="#" className="text-gray-400 hover:text-primary transition-colors">Terms of Service</a>

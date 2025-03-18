@@ -27,10 +27,11 @@ const Hero = () => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 px-4 sm:px-6">
-      {/* Background gradients */}
+      {/* Background gradients with Indian flag-inspired colors */}
       <div className="absolute top-0 left-0 right-0 h-full overflow-hidden -z-10">
-        <div className="absolute top-[-20%] right-[-10%] w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-blue-200/20 rounded-full blur-[80px]" />
+        <div className="absolute top-[-20%] right-[-10%] w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-orange-200/20 rounded-full blur-[80px]" />
         <div className="absolute top-[30%] left-[-5%] w-[250px] sm:w-[500px] h-[250px] sm:h-[500px] bg-green-200/20 rounded-full blur-[80px]" />
+        <div className="absolute bottom-[10%] left-[30%] w-[200px] sm:w-[400px] h-[200px] sm:h-[400px] bg-blue-200/20 rounded-full blur-[80px]" />
       </div>
 
       {/* Content */}
@@ -40,7 +41,7 @@ const Hero = () => {
       >
         <div className="max-w-5xl mx-auto text-center">
           <div className="inline-block px-3 py-1 mb-4 sm:mb-6 bg-blue-50 text-blue-600 rounded-full text-xs sm:text-sm font-medium animate-fade-in">
-            The Future of Waste Management
+            India's Leading Waste Management Platform
           </div>
           
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-4 sm:mb-6 animate-fade-up" style={{ animationDelay: '0.2s' }}>
@@ -48,7 +49,7 @@ const Hero = () => {
           </h1>
           
           <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-6 sm:mb-8 animate-fade-up" style={{ animationDelay: '0.4s' }}>
-            Connect with factories, industries and recyclers to buy, sell, and transform waste materials, 
+            Connect with factories, industries and recyclers across India to buy, sell, and transform waste materials, 
             reducing environmental impact while creating economic opportunities.
           </p>
           
