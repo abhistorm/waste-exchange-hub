@@ -8,7 +8,7 @@ import Benefits from '@/components/Benefits';
 import Footer from '@/components/Footer';
 import CarbonCalculator from '@/components/CarbonCalculator';
 import RecyclingAssistant from '@/components/RecyclingAssistant';
-import { ToastProvider } from '@/components/ui/toast';
+import ArtisanMarketplace from '@/components/ArtisanMarketplace';
 import { Toaster } from '@/components/ui/toaster';
 
 const Index = () => {
@@ -33,6 +33,7 @@ const Index = () => {
       <main>
         <Hero />
         <MarketplaceSection />
+        <ArtisanMarketplace />
         <ProcessSteps />
         <Benefits />
       </main>
