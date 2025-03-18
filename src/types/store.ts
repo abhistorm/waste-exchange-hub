@@ -16,4 +16,8 @@ export interface Product {
     carbonSaved: number; // in kg of CO2
     wasteDiverted: string;
   };
+  discountPercent?: number;
+  bestSeller?: boolean;
+  freeShipping?: boolean;
+  reviews?: number;
 }
