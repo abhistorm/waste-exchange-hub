@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Package, Mail, Lock, User, AlertCircle } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
+import Footer from '@/components/Footer';
 import {
   Form,
   FormControl,
