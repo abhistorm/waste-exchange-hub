@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Navbar } from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
-  MapPin, Search, TrendingUp, 
+  MapPin, TrendingUp, 
   DollarSign, Recycle, Scale, AlertCircle,
   Newspaper, ShoppingBag, Wine, FileText, BookOpen,
   Package, Trash2, Construction, UtensilsCrossed, PanelTop,
@@ -13,7 +11,6 @@ import {
   Droplets, Snowflake, Fan, Printer, MonitorSmartphone, Smartphone,
   MonitorOff, Monitor, Cpu, Bike, Car
 } from 'lucide-react';
-import { Label } from '@/components/ui/label';
 import { 
   Table, 
   TableBody, 
@@ -22,8 +19,10 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { ChartContainer } from '@/components/ui/chart';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 // Updated scrap materials with rates provided
 const scrapMaterials = [
@@ -85,11 +84,23 @@ const serviceCities = [
   'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Lucknow'
 ];
 
+// Updated material rates for Normal Recyclables category for chart display
+const recycleRateData = [
+  { name: 'Newspaper', rate: 14 },
+  { name: 'Clothes', rate: 2 },
+  { name: 'Glass bottles', rate: 2 },
+  { name: 'Office Paper', rate: 14 },
+  { name: 'Copies/Books', rate: 12 },
+  { name: 'Cardboard', rate: 8 },
+  { name: 'PET Bottles', rate: 8 },
+  { name: 'Iron', rate: 26 },
+  { name: 'Steel Utensils', rate: 40 },
+  { name: 'Aluminium', rate: 105 },
+  { name: 'Brass', rate: 305 },
+  { name: 'Copper', rate: 425 },
+];
+
 const LocalRates = () => {
-  const [location, setLocation] = useState('');
-  const [showRates, setShowRates] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
-  const [serviceAvailable, setServiceAvailable] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
   
   const categories = ['All', ...new Set(scrapMaterials.map(item => item.category))];
@@ -97,33 +108,6 @@ const LocalRates = () => {
   const filteredMaterials = activeCategory === 'All' 
     ? scrapMaterials 
     : scrapMaterials.filter(item => item.category === activeCategory);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSearching(true);
-    
-    // Simulate API call with a delay
-    setTimeout(() => {
-      // Check if entered location is in our service cities list
-      const isAvailable = serviceCities.some(
-        city => city.toLowerCase() === location.toLowerCase()
-      );
-      
-      setServiceAvailable(isAvailable);
-      setShowRates(isAvailable);
-      setIsSearching(false);
-      
-      if (isAvailable) {
-        toast.success("Location found!", {
-          description: `Showing current scrap rates for ${location}`,
-        });
-      } else {
-        toast.error("Service not available", {
-          description: "We currently don't operate in this location",
-        });
-      }
-    }, 1500);
-  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -134,49 +118,14 @@ const LocalRates = () => {
         <section className="bg-gradient-to-b from-green-50 to-white dark:from-green-950/20 dark:to-background py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-3xl md:text-4xl font-bold mb-6">
-              Check Current Scrap Rates in Your Area
+              Current Scrap Rates
             </h1>
             <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-8">
-              Get real-time market rates for all types of scrap materials. Enter your location to see current buying rates.
+              Get real-time market rates for all types of scrap materials. See our competitive buying rates across all cities we serve.
             </p>
             
-            <form onSubmit={handleSearch} className="max-w-md mx-auto relative">
-              <div className="flex items-center gap-2">
-                <div className="relative flex-grow">
-                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    type="text"
-                    placeholder="Enter your city"
-                    className="pl-10 pr-4 py-6"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    required
-                  />
-                </div>
-                <Button type="submit" disabled={isSearching} className="py-6">
-                  {isSearching ? "Searching..." : "Check Rates"}
-                  <Search className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </form>
-          </div>
-        </section>
-        
-        {/* Service not available alert */}
-        {!serviceAvailable && !isSearching && location && (
-          <div className="container mx-auto px-4 my-8">
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Service Unavailable</AlertTitle>
-              <AlertDescription>
-                We currently don't service {location}. We're expanding quickly! 
-                Please check back later or try a different location.
-              </AlertDescription>
-            </Alert>
-            
-            <div className="mt-6 text-center">
-              <h3 className="text-lg font-medium mb-3">Cities where we currently operate:</h3>
-              <div className="flex flex-wrap justify-center gap-2">
+            <div className="max-w-md mx-auto">
+              <div className="flex flex-wrap justify-center gap-2 mt-6">
                 {serviceCities.map((city) => (
                   <span 
                     key={city} 
@@ -189,79 +138,128 @@ const LocalRates = () => {
               </div>
             </div>
           </div>
-        )}
+        </section>
+        
+        {/* Rates visualization chart */}
+        <section className="py-10 bg-gray-50 dark:bg-gray-900/20">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
+              Normal Recyclables Rate Chart
+            </h2>
+            <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
+              Visual representation of our current rates for common recyclable materials (₹/kg)
+            </p>
+            
+            <div className="w-full h-[400px] mt-6">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={recycleRateData}
+                  margin={{
+                    top: 20,
+                    right: 30,
+                    left: 20,
+                    bottom: 70,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="name" 
+                    angle={-45} 
+                    textAnchor="end"
+                    height={80}
+                    tick={{fontSize: 12}}
+                  />
+                  <YAxis />
+                  <Tooltip 
+                    formatter={(value) => [`₹${value}/kg`, 'Rate']}
+                    labelFormatter={(label) => `Material: ${label}`}
+                  />
+                  <Legend />
+                  <Bar dataKey="rate" fill="#4f46e5" name="Rate (₹/kg)" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            
+            <div className="text-center mt-4 text-gray-600 dark:text-gray-400 text-sm">
+              Last updated: {new Date().toLocaleDateString()}
+              <span className="block mt-1">
+                Rates are subject to change based on market conditions
+              </span>
+            </div>
+          </div>
+        </section>
         
         {/* Rates table */}
-        {showRates && (
-          <section className="py-12">
-            <div className="container mx-auto px-4">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl md:text-3xl font-bold mb-2">
-                  Current Scrap Rates in {location}
-                </h2>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Last updated: {new Date().toLocaleDateString()} 
-                  <span className="text-sm ml-1">
-                    (Rates are subject to change based on market conditions)
-                  </span>
-                </p>
-              </div>
-              
-              {/* Category filter tabs */}
-              <div className="flex flex-wrap justify-center gap-2 mb-6">
-                {categories.map(category => (
-                  <button
-                    key={category}
-                    onClick={() => setActiveCategory(category)}
-                    className={`px-4 py-2 rounded-full text-sm ${
-                      activeCategory === category
-                        ? 'bg-primary text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
-              
-              <div className="overflow-x-auto rounded-lg border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[40px]"></TableHead>
-                      <TableHead>Material</TableHead>
-                      <TableHead>Rate</TableHead>
-                      <TableHead>Notes</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredMaterials.map((material) => (
-                      <TableRow key={material.id}>
-                        <TableCell>{material.icon}</TableCell>
-                        <TableCell className="font-medium">{material.name}</TableCell>
-                        <TableCell>{material.rate}</TableCell>
-                        <TableCell className="text-sm text-gray-500">{material.note}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-              
-              <div className="mt-8 text-center">
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  onClick={() => toast.success("Request sent!", {
-                    description: "We'll contact you shortly to schedule a pickup",
-                  })}
-                >
-                  <DollarSign className="mr-2 h-5 w-5" />
-                  Request Pickup for Best Rates
-                </Button>
-              </div>
+        <section className="py-12">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                Current Scrap Rates
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400">
+                Last updated: {new Date().toLocaleDateString()} 
+                <span className="text-sm ml-1">
+                  (Rates are subject to change based on market conditions)
+                </span>
+              </p>
             </div>
-          </section>
-        )}
+            
+            {/* Category filter tabs */}
+            <div className="flex flex-wrap justify-center gap-2 mb-6">
+              {categories.map(category => (
+                <button
+                  key={category}
+                  onClick={() => setActiveCategory(category)}
+                  className={`px-4 py-2 rounded-full text-sm ${
+                    activeCategory === category
+                      ? 'bg-primary text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+            
+            <div className="overflow-x-auto rounded-lg border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[40px]"></TableHead>
+                    <TableHead>Material</TableHead>
+                    <TableHead>Rate</TableHead>
+                    <TableHead>Notes</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredMaterials.map((material) => (
+                    <TableRow key={material.id}>
+                      <TableCell>{material.icon}</TableCell>
+                      <TableCell className="font-medium">{material.name}</TableCell>
+                      <TableCell>{material.rate}</TableCell>
+                      <TableCell className="text-sm text-gray-500">
+                        {material.note.replace('+91-8595358613', '+91 98765 43210')}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+            
+            <div className="mt-8 text-center">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                onClick={() => toast.success("Request sent!", {
+                  description: "We'll contact you shortly to schedule a pickup",
+                })}
+              >
+                <DollarSign className="mr-2 h-5 w-5" />
+                Request Pickup for Best Rates
+              </Button>
+            </div>
+          </div>
+        </section>
         
         {/* Benefits section */}
         <section className="py-12 bg-gray-50 dark:bg-gray-900/30">
@@ -346,7 +344,7 @@ const LocalRates = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 dark:text-gray-400">
-                    Simply enter your location above, check the current rates, and request a pickup. 
+                    Simply check the current rates, and request a pickup. 
                     Our team will contact you to schedule a convenient time, arrive at your location, 
                     weigh the materials, and pay you on the spot.
                   </p>
@@ -382,12 +380,11 @@ const LocalRates = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
-                onClick={() => {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                  toast.info("Scroll to top to check rates in your area!");
-                }}
+                onClick={() => toast.success("Request sent!", {
+                  description: "We'll contact you shortly to schedule a pickup",
+                })}
               >
-                Check Local Rates
+                Request Pickup
               </Button>
               <Button 
                 size="lg" 
