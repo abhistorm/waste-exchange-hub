@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Home, ShoppingBag, Bot, Recycle, BarChart, DollarSign } from 'lucide-react';
+import { Home, ShoppingBag, Bot, Recycle, BarChart, DollarSign, MessageCircle, Zap, Lightbulb } from 'lucide-react';
 import { 
   NavigationMenu,
   NavigationMenuContent,
@@ -58,11 +58,11 @@ const DesktopNav: React.FC = () => {
                       className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                     >
                       <div className="text-sm font-medium leading-none flex items-center">
-                        <Bot className="mr-2 h-4 w-4" />
+                        <MessageCircle className="mr-2 h-4 w-4" />
                         Recycling Assistant
                       </div>
                       <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Our AI helps identify and categorize waste materials for optimal recycling.
+                        Chat with our AI to identify and categorize materials for optimal recycling.
                       </p>
                     </Link>
                   </NavigationMenuLink>
@@ -70,15 +70,15 @@ const DesktopNav: React.FC = () => {
                 <li>
                   <NavigationMenuLink asChild>
                     <Link
-                      to="/waste-analysis"
+                      to="/material-analyzer"
                       className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                     >
                       <div className="text-sm font-medium leading-none flex items-center">
                         <BarChart className="mr-2 h-4 w-4" />
-                        Material Analysis
+                        Material Analyzer
                       </div>
                       <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        AI-powered material analysis and value estimation for your waste.
+                        AI-powered material analysis and value estimation for your waste materials.
                       </p>
                     </Link>
                   </NavigationMenuLink>
@@ -95,6 +95,22 @@ const DesktopNav: React.FC = () => {
                       </div>
                       <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                         Calculate the environmental impact of your recycling efforts.
+                      </p>
+                    </Link>
+                  </NavigationMenuLink>
+                </li>
+                <li>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      to="/recycling-tips"
+                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                    >
+                      <div className="text-sm font-medium leading-none flex items-center">
+                        <Lightbulb className="mr-2 h-4 w-4" />
+                        Smart Recycling Tips
+                      </div>
+                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        AI-generated tips to maximize the value and environmental impact of your recycling.
                       </p>
                     </Link>
                   </NavigationMenuLink>

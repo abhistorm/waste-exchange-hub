@@ -12,6 +12,10 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import LocalRates from "./pages/LocalRates";
 import NotFound from "./pages/NotFound";
+import AIAssistant from "./pages/AIAssistant";
+import MaterialAnalyzer from "./pages/MaterialAnalyzer";
+import CarbonCalculator from "./pages/CarbonCalculator";
+import RecyclingTips from "./pages/RecyclingTips";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +33,13 @@ const App = () => (
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/local-rates" element={<LocalRates />} />
+          
+          {/* AI Solution Routes */}
+          <Route path="/ai-assistant" element={<AIAssistant />} />
+          <Route path="/material-analyzer" element={<MaterialAnalyzer />} />
+          <Route path="/carbon-calculator" element={<CarbonCalculator />} />
+          <Route path="/recycling-tips" element={<RecyclingTips />} />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

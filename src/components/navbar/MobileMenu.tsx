@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Home, ShoppingBag, UserPlus, LogIn, Bot, DollarSign } from 'lucide-react';
+import { Home, ShoppingBag, UserPlus, LogIn, Bot, DollarSign, MessageCircle, BarChart, Recycle, Lightbulb } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface MobileMenuProps {
@@ -41,14 +41,38 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
         </Link>
         
         <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-          <p className="px-4 py-2 text-sm font-semibold text-gray-500">AI-Powered Platform</p>
+          <p className="px-4 py-2 text-sm font-semibold text-gray-500">AI-Powered Solutions</p>
           <Link 
             to="/ai-assistant"
             className="px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center"
             onClick={onClose}
           >
-            <Bot className="mr-2 h-4 w-4" />
-            AI Assistant
+            <MessageCircle className="mr-2 h-4 w-4" />
+            Recycling Assistant
+          </Link>
+          <Link 
+            to="/material-analyzer"
+            className="px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center"
+            onClick={onClose}
+          >
+            <BarChart className="mr-2 h-4 w-4" />
+            Material Analyzer
+          </Link>
+          <Link 
+            to="/carbon-calculator"
+            className="px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center"
+            onClick={onClose}
+          >
+            <Recycle className="mr-2 h-4 w-4" />
+            Carbon Calculator
+          </Link>
+          <Link 
+            to="/recycling-tips"
+            className="px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center"
+            onClick={onClose}
+          >
+            <Lightbulb className="mr-2 h-4 w-4" />
+            Smart Recycling Tips
           </Link>
         </div>
         

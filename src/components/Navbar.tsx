@@ -1,15 +1,18 @@
 
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Bot } from 'lucide-react';
 import Logo from './navbar/Logo';
 import DesktopNav from './navbar/DesktopNav';
 import ActionButtons from './navbar/ActionButtons';
 import MobileMenu from './navbar/MobileMenu';
+import { Link } from 'react-router-dom';
+import { Button } from './ui/button';
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showAIMenu, setShowAIMenu] = useState(false);
 
   // Handle scroll effect
   useEffect(() => {
@@ -23,6 +26,19 @@ export const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  // Close AI menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('[data-ai-menu]')) {
+        setShowAIMenu(false);
+      }
+    };
+    
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
   return (
