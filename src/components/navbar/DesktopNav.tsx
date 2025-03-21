@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Home, ShoppingBag, Info, Phone } from 'lucide-react';
+import { Home, ShoppingBag, Info, Phone, Bot, Recycle, BarChart } from 'lucide-react';
 import { 
   NavigationMenu,
   NavigationMenuContent,
@@ -37,6 +37,65 @@ const DesktopNav: React.FC = () => {
 
           <NavigationMenuItem>
             <NavigationMenuTrigger>
+              <Bot className="mr-2 h-4 w-4" />
+              AI Solutions
+            </NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid gap-3 p-4 w-[400px] md:w-[500px] lg:w-[600px] lg:grid-cols-2">
+                <li>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      to="/ai-assistant"
+                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                    >
+                      <div className="text-sm font-medium leading-none flex items-center">
+                        <Bot className="mr-2 h-4 w-4" />
+                        Recycling Assistant
+                      </div>
+                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        Our AI helps identify and categorize waste materials for optimal recycling.
+                      </p>
+                    </Link>
+                  </NavigationMenuLink>
+                </li>
+                <li>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      to="/waste-analysis"
+                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                    >
+                      <div className="text-sm font-medium leading-none flex items-center">
+                        <BarChart className="mr-2 h-4 w-4" />
+                        Material Analysis
+                      </div>
+                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        AI-powered material analysis and value estimation for your waste.
+                      </p>
+                    </Link>
+                  </NavigationMenuLink>
+                </li>
+                <li>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      to="/carbon-calculator"
+                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                    >
+                      <div className="text-sm font-medium leading-none flex items-center">
+                        <Recycle className="mr-2 h-4 w-4" />
+                        Carbon Calculator
+                      </div>
+                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        Calculate the environmental impact of your recycling efforts.
+                      </p>
+                    </Link>
+                  </NavigationMenuLink>
+                </li>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>
               <Info className="mr-2 h-4 w-4" />
               About
             </NavigationMenuTrigger>
@@ -50,7 +109,7 @@ const DesktopNav: React.FC = () => {
                     >
                       <div className="text-sm font-medium leading-none">How It Works</div>
                       <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Learn about our recycling process and how we turn waste into valuable products.
+                        Learn about our AI-powered recycling process and how we turn waste into valuable products.
                       </p>
                     </a>
                   </NavigationMenuLink>
@@ -63,7 +122,7 @@ const DesktopNav: React.FC = () => {
                     >
                       <div className="text-sm font-medium leading-none">Benefits</div>
                       <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Discover the environmental and social benefits of our platform.
+                        Discover the environmental and social benefits of our AI platform.
                       </p>
                     </a>
                   </NavigationMenuLink>

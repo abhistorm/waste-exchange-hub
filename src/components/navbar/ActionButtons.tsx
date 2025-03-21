@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Search, ShoppingBag } from 'lucide-react';
+import { Search, ShoppingBag, UserPlus, LogIn } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
@@ -16,6 +16,20 @@ const ActionButtons: React.FC = () => {
           Visit Store
         </Button>
       </Link>
+      <div className="flex items-center space-x-2">
+        <Link to="/signin">
+          <Button variant="ghost" className="flex items-center gap-2">
+            <LogIn className="h-4 w-4" />
+            Sign In
+          </Button>
+        </Link>
+        <Link to="/signup">
+          <Button variant="outline" className="flex items-center gap-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50">
+            <UserPlus className="h-4 w-4" />
+            Sign Up
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 };
