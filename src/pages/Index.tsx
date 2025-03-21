@@ -12,7 +12,7 @@ import ArtisanMarketplace from '@/components/ArtisanMarketplace';
 import { Toaster } from '@/components/ui/toaster';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag } from 'lucide-react';
+import { ShoppingBag, DollarSign } from 'lucide-react';
 
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -48,12 +48,20 @@ const Index = () => {
               Browse our full collection of handcrafted items made from recycled materials.
               Find unique pieces and support sustainable artisans.
             </p>
-            <Link to="/store">
-              <Button size="lg" className="gap-2">
-                <ShoppingBag className="h-5 w-5" />
-                Visit Store
-              </Button>
-            </Link>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link to="/store">
+                <Button size="lg" className="gap-2">
+                  <ShoppingBag className="h-5 w-5" />
+                  Visit Store
+                </Button>
+              </Link>
+              <Link to="/local-rates">
+                <Button size="lg" variant="outline" className="gap-2">
+                  <DollarSign className="h-5 w-5" />
+                  Check Scrap Rates
+                </Button>
+              </Link>
+            </div>
           </div>
         </section>
         
