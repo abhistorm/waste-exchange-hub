@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Home, ShoppingBag, Info, Phone, UserPlus, LogIn, Bot } from 'lucide-react';
+import { Home, ShoppingBag, UserPlus, LogIn, Bot, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface MobileMenuProps {
@@ -31,30 +31,14 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
           <ShoppingBag className="mr-2 h-4 w-4" />
           Store
         </Link>
-        <a 
-          href="#process" 
+        <Link 
+          to="/local-rates"
           className="px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center"
           onClick={onClose}
         >
-          <Info className="mr-2 h-4 w-4" />
-          How It Works
-        </a>
-        <a 
-          href="#benefits" 
-          className="px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center"
-          onClick={onClose}
-        >
-          <Info className="mr-2 h-4 w-4" />
-          Benefits
-        </a>
-        <a 
-          href="#contact" 
-          className="px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center"
-          onClick={onClose}
-        >
-          <Phone className="mr-2 h-4 w-4" />
-          Contact
-        </a>
+          <DollarSign className="mr-2 h-4 w-4" />
+          Local Rates
+        </Link>
         
         <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
           <p className="px-4 py-2 text-sm font-semibold text-gray-500">AI-Powered Platform</p>
