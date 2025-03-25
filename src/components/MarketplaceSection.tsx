@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import MaterialCard from './MaterialCard';
 import { Search, Filter, ArrowRight, Tag, Gavel } from 'lucide-react';
 import { AuctionItem } from '@/types/auction';
+import MaterialListingForm from './MaterialListingForm';
 
 // Sample auctions data
 const auctionData: AuctionItem[] = [
@@ -204,9 +205,14 @@ const MarketplaceSection = () => {
             Browse Materials
           </div>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Waste Material Marketplace</h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 mb-6">
             Discover available industrial waste materials ready for repurposing, recycling, or reuse.
+            List your own materials to reduce waste and promote a circular economy.
           </p>
+          
+          <div className="flex justify-center">
+            <MaterialListingForm />
+          </div>
         </div>
         
         {/* Search and Filter */}

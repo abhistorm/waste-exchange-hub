@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -7,7 +6,7 @@ import ProductGrid from '@/components/store/ProductGrid';
 import StoreFilters from '@/components/store/StoreFilters';
 import { Product } from '@/types/store';
 import ListProductModal from '@/components/store/ListProductModal';
-import { Button } from '@/components/ui/button';
+import StoreHeader from '@/components/store/StoreHeader';
 import { Plus, ShoppingBag } from 'lucide-react';
 
 // Mock product data
@@ -253,29 +252,8 @@ const Store = () => {
       <Navbar />
       
       <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        {/* Hero section */}
-        <section className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 py-12">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <div>
-                <h1 className="text-3xl md:text-4xl font-bold mb-2">Recycled Products Marketplace</h1>
-                <p className="text-gray-600 dark:text-gray-400 mb-4 max-w-xl">
-                  Discover unique, handcrafted items made from recycled materials. 
-                  Support sustainable artisans and reduce waste.
-                </p>
-              </div>
-              
-              <Button 
-                onClick={() => setIsListModalOpen(true)}
-                className="bg-emerald-600 hover:bg-emerald-700 flex items-center gap-2"
-                size="lg"
-              >
-                <Plus size={18} />
-                List Your Product
-              </Button>
-            </div>
-          </div>
-        </section>
+        {/* Hero section with cart */}
+        <StoreHeader onOpenListModal={() => setIsListModalOpen(true)} />
         
         {/* Main store section */}
         <section className="py-12">

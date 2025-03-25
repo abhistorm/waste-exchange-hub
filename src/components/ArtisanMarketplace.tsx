@@ -4,6 +4,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Recycle, ShoppingBag, Leaf } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import ArtisanWorkshopForm from './artisan/ArtisanWorkshopForm';
+import { useCart } from '@/contexts/CartContext';
 
 interface ArtisanProduct {
   id: number;
@@ -64,6 +66,32 @@ const products: ArtisanProduct[] = [
 ];
 
 const ArtisanMarketplace = () => {
+  const { addToCart } = useCart();
+  
+  // Create a product object from ArtisanProduct to add to cart
+  const handleAddToCart = (product: ArtisanProduct) => {
+    const cartProduct = {
+      id: product.id,
+      name: product.title,
+      description: product.description,
+      price: product.price,
+      category: "Artisan Craft",
+      image: product.image,
+      seller: product.artisan,
+      materials: [product.materials],
+      inStock: true,
+      rating: 4.5,
+      dateAdded: new Date(),
+      sustainability: {
+        percentRecycled: 100,
+        carbonSaved: 2.5,
+        wasteDiverted: "1kg"
+      }
+    };
+    
+    addToCart(cartProduct);
+  };
+
   return (
     <section className="py-16 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20">
       <div className="container mx-auto px-4">
@@ -111,7 +139,7 @@ const ArtisanMarketplace = () => {
                     <div className="pt-4">
                       <CardTitle>{product.title}</CardTitle>
                       <CardDescription className="flex justify-between mt-1">
-                        <span className="font-medium">${product.price}</span>
+                        <span className="font-medium">₹{product.price}</span>
                         <span className="text-emerald-600 dark:text-emerald-400">{product.artisan}</span>
                       </CardDescription>
                     </div>
@@ -123,7 +151,12 @@ const ArtisanMarketplace = () => {
                     <p className="text-sm">{product.description}</p>
                   </CardContent>
                   <CardFooter className="pt-2">
-                    <Button className="w-full">Add to Cart</Button>
+                    <Button 
+                      className="w-full"
+                      onClick={() => handleAddToCart(product)}
+                    >
+                      Add to Cart
+                    </Button>
                   </CardFooter>
                 </Card>
               </CarouselItem>
@@ -137,9 +170,7 @@ const ArtisanMarketplace = () => {
 
         <div className="mt-12 text-center">
           <h3 className="text-xl font-semibold mb-6">Are you an artisan creating products from waste materials?</h3>
-          <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
-            Join Our Artisan Marketplace
-          </Button>
+          <ArtisanWorkshopForm />
           <p className="mt-4 text-sm text-gray-500 dark:text-gray-400 max-w-lg mx-auto">
             We provide a platform for skilled craftspeople to showcase and sell their upcycled creations, 
             helping to reduce waste while supporting sustainable livelihoods.

@@ -4,20 +4,17 @@ import { Product } from '@/types/store';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Leaf, Star, Recycle, ShoppingCart } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useCart } from '@/contexts/CartContext';
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const { toast } = useToast();
+  const { addToCart } = useCart();
   
   const handleAddToCart = () => {
-    toast({
-      title: "Added to cart",
-      description: `${product.name} has been added to your cart.`,
-    });
+    addToCart(product, 1);
   };
 
   return (
