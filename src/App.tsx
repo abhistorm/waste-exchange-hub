@@ -18,6 +18,7 @@ import MaterialAnalyzer from "./pages/MaterialAnalyzer";
 import CarbonCalculator from "./pages/CarbonCalculator";
 import RecyclingTips from "./pages/RecyclingTips";
 import Checkout from "./pages/Checkout";
+import MaterialMarketplace from "./pages/MaterialMarketplace";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/signup" element={<SignUp />} />
             <Route path="/local-rates" element={<LocalRates />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/material-marketplace" element={<MaterialMarketplace />} />
             
             {/* AI Solution Routes */}
             <Route path="/ai-assistant" element={<AIAssistant />} />

@@ -12,7 +12,7 @@ import ArtisanMarketplace from '@/components/ArtisanMarketplace';
 import { Toaster } from '@/components/ui/toaster';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, DollarSign } from 'lucide-react';
+import { ShoppingBag, DollarSign, Recycle, Paintbrush } from 'lucide-react';
 
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -38,27 +38,33 @@ const Index = () => {
         <MarketplaceSection />
         <ArtisanMarketplace />
         
-        {/* Store CTA Section */}
+        {/* Marketplace CTA Section */}
         <section className="py-12 bg-emerald-50 dark:bg-emerald-950/20">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-2xl md:text-3xl font-bold mb-4">
-              Discover Our Complete Recycled Products Store
+              Explore Our Marketplaces
             </h2>
             <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
-              Browse our full collection of handcrafted items made from recycled materials.
-              Find unique pieces and support sustainable artisans.
+              Whether you're looking to buy unique recycled products, sell your waste materials, 
+              or showcase your artisan skills, we have the perfect marketplace for you.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link to="/store">
                 <Button size="lg" className="gap-2">
                   <ShoppingBag className="h-5 w-5" />
-                  Visit Store
+                  Recycled Products
+                </Button>
+              </Link>
+              <Link to="/material-marketplace">
+                <Button size="lg" variant="outline" className="gap-2">
+                  <Recycle className="h-5 w-5" />
+                  Waste Materials
                 </Button>
               </Link>
               <Link to="/local-rates">
                 <Button size="lg" variant="outline" className="gap-2">
                   <DollarSign className="h-5 w-5" />
-                  Check Scrap Rates
+                  Local Scrap Rates
                 </Button>
               </Link>
             </div>
