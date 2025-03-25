@@ -1,4 +1,6 @@
 
+import { AuctionItem } from './auction';
+
 export interface Material {
   id: number;
   title: string;
@@ -16,4 +18,5 @@ export interface Material {
   };
   dateAdded: Date;
   image?: string;
+  auction?: AuctionItem;
 }

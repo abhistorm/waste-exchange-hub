@@ -5,27 +5,16 @@ import { Package, DollarSign, Recycle, Map, Gavel } from 'lucide-react';
 import AuctionBadge from './AuctionBadge';
 import AuctionDetails from './AuctionDetails';
 import { AuctionItem } from '@/types/auction';
+import { Material } from '@/types/material';
 import { useToast } from '@/hooks/use-toast';
 
 type MaterialCardProps = {
-  material: {
-    id: number;
-    title: string;
-    category: string;
-    description: string;
-    price: number;
-    quantity: string;
-    location: string;
-    isRecyclable: boolean;
-    image: string;
-    isAuction?: boolean;
-    auction?: AuctionItem;
-  };
-  index: number;
+  material: Material;
+  index?: number;
   className?: string;
 };
 
-export const MaterialCard = ({ material, index, className }: MaterialCardProps) => {
+export const MaterialCard = ({ material, index = 0, className }: MaterialCardProps) => {
   // Calculate animation delay based on index for staggered entrance
   const animationDelay = `${0.1 + index * 0.1}s`;
   const [isAuctionModalOpen, setIsAuctionModalOpen] = useState(false);
@@ -50,6 +39,9 @@ export const MaterialCard = ({ material, index, className }: MaterialCardProps) 
     }
   };
 
+  // Use a default placeholder image if no image is provided
+  const imageUrl = material.image || "https://images.unsplash.com/photo-1605810230434-7631ac76ec81";
+
   return (
     <div 
       className={cn(
@@ -61,7 +53,7 @@ export const MaterialCard = ({ material, index, className }: MaterialCardProps) 
       {/* Image */}
       <div className="relative h-48 overflow-hidden">
         <img 
-          src={material.image} 
+          src={imageUrl} 
           alt={material.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"

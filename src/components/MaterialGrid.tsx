@@ -12,8 +12,8 @@ const MaterialGrid = ({ materials }: MaterialGridProps) => {
     <div>
       {materials.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {materials.map(material => (
-            <MaterialCard key={material.id} material={material} />
+          {materials.map((material, index) => (
+            <MaterialCard key={material.id} material={material} index={index} />
           ))}
         </div>
       ) : (
