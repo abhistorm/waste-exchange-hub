@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import MaterialCard from './MaterialCard';
 import { Search, Filter, ArrowRight, Tag, Gavel } from 'lucide-react';
 import { AuctionItem } from '@/types/auction';
+import { Material } from '@/types/material';
 import MaterialListingForm from './MaterialListingForm';
 
 // Sample auctions data
@@ -55,7 +55,7 @@ const auctionData: AuctionItem[] = [
 ];
 
 // Sample materials data
-const materialData = [
+const materialData: Material[] = [
   {
     id: 1,
     title: "Metal Scraps - Aluminum",
@@ -65,8 +65,14 @@ const materialData = [
     quantity: "2 tons available",
     location: "Chicago, IL",
     isRecyclable: true,
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
-    isAuction: false
+    isAuction: false,
+    seller: {
+      id: 101,
+      name: "MetalWorks Industries",
+      rating: 4.8
+    },
+    dateAdded: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81"
   },
   {
     id: 2,
@@ -77,8 +83,14 @@ const materialData = [
     quantity: "75 units",
     location: "Denver, CO",
     isRecyclable: true,
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
-    isAuction: true
+    isAuction: true,
+    seller: {
+      id: 102,
+      name: "WoodReuse Solutions",
+      rating: 4.5
+    },
+    dateAdded: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
   },
   {
     id: 3,
@@ -89,8 +101,14 @@ const materialData = [
     quantity: "1.5 tons available",
     location: "Atlanta, GA",
     isRecyclable: true,
-    image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b",
-    isAuction: true
+    isAuction: true,
+    seller: {
+      id: 103,
+      name: "PlasticsRecycle Inc",
+      rating: 4.7
+    },
+    dateAdded: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+    image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b"
   },
   {
     id: 4,
@@ -101,8 +119,14 @@ const materialData = [
     quantity: "500 lbs available",
     location: "Los Angeles, CA",
     isRecyclable: true,
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
-    isAuction: false
+    isAuction: false,
+    seller: {
+      id: 104,
+      name: "FabricCycle",
+      rating: 4.3
+    },
+    dateAdded: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81"
   },
   {
     id: 5,
@@ -113,8 +137,14 @@ const materialData = [
     quantity: "200 lbs available",
     location: "Boston, MA",
     isRecyclable: true,
-    image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b",
-    isAuction: false
+    isAuction: false,
+    seller: {
+      id: 105,
+      name: "TechRecycle Inc",
+      rating: 4.9
+    },
+    dateAdded: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+    image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b"
   },
   {
     id: 6,
@@ -125,8 +155,14 @@ const materialData = [
     quantity: "3 tons available",
     location: "Seattle, WA",
     isRecyclable: true,
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
-    isAuction: true
+    isAuction: true,
+    seller: {
+      id: 106,
+      name: "GlassMasters",
+      rating: 4.4
+    },
+    dateAdded: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
   }
 ];
 
