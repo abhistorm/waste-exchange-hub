@@ -1,10 +1,21 @@
 
 import React from 'react';
-import { Search, ShoppingBag, UserPlus, LogIn } from 'lucide-react';
+import { Search, ShoppingBag, UserPlus, LogIn, LogOut, User, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const ActionButtons: React.FC = () => {
+  const { user, isAuthenticated, isAdmin, logout } = useAuth();
+
   return (
     <div className="hidden md:flex items-center space-x-4">
       <button className="p-2 text-gray-700 hover:text-primary transition-colors duration-200">
@@ -16,20 +27,58 @@ const ActionButtons: React.FC = () => {
           Visit Store
         </Button>
       </Link>
-      <div className="flex items-center space-x-2">
-        <Link to="/signin">
-          <Button variant="ghost" className="flex items-center gap-2">
-            <LogIn className="h-4 w-4" />
-            Sign In
-          </Button>
-        </Link>
-        <Link to="/signup">
-          <Button variant="outline" className="flex items-center gap-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50">
-            <UserPlus className="h-4 w-4" />
-            Sign Up
-          </Button>
-        </Link>
-      </div>
+
+      {/* Show different buttons based on authentication state */}
+      {isAuthenticated ? (
+        <div className="flex items-center space-x-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                {user?.name || 'User'}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Account</DropdownMenuLabel>
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>My Listings</DropdownMenuItem>
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+              {isAdmin && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel>Admin</DropdownMenuLabel>
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin" className="flex items-center gap-2">
+                      <Shield className="h-4 w-4" />
+                      Admin Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              )}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={logout} className="text-red-600">
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      ) : (
+        <div className="flex items-center space-x-2">
+          <Link to="/signin">
+            <Button variant="ghost" className="flex items-center gap-2">
+              <LogIn className="h-4 w-4" />
+              Sign In
+            </Button>
+          </Link>
+          <Link to="/signup">
+            <Button variant="outline" className="flex items-center gap-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50">
+              <UserPlus className="h-4 w-4" />
+              Sign Up
+            </Button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

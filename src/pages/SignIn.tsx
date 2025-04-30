@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
+import { useAuth } from '@/contexts/AuthContext';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -29,8 +30,13 @@ type FormValues = z.infer<typeof formSchema>;
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login, isAdmin } = useAuth();
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+
+  // Get the "from" path from location state, or default to "/"
+  const from = location.state?.from || '/';
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -45,20 +51,26 @@ const SignIn = () => {
     setError(null);
     
     try {
-      // This would be replaced with actual auth implementation
-      console.log('Signin values:', values);
+      const success = await login(values.email, values.password);
       
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      
-      toast.success('Sign in successful!', {
-        description: 'Welcome back to WasteExchange',
-      });
-      
-      // Redirect to home page
-      navigate('/');
+      if (success) {
+        // Show success toast
+        toast.success('Sign in successful!', {
+          description: 'Welcome back to WasteExchange',
+        });
+        
+        // Check if user is admin, redirect to admin panel if so
+        if (isAdmin) {
+          navigate('/admin');
+        } else {
+          // Redirect to the page user was trying to access, or home
+          navigate(from);
+        }
+      } else {
+        setError('Invalid email or password. Please try again.');
+      }
     } catch (err) {
-      setError('Invalid email or password. Please try again.');
+      setError('An error occurred during sign in. Please try again.');
       console.error('Sign in error:', err);
     } finally {
       setIsLoading(false);

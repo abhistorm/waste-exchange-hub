@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
+import { useAuth } from '@/contexts/AuthContext';
 
 const formSchema = z
   .object({
@@ -36,6 +37,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const { signup } = useAuth();
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -54,18 +56,18 @@ const SignUp = () => {
     setError(null);
     
     try {
-      // This would be replaced with actual auth implementation
-      console.log('Signup values:', values);
+      const success = await signup(values.name, values.email, values.password);
       
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      
-      toast.success('Account created successfully!', {
-        description: 'Welcome to WasteExchange',
-      });
-      
-      // Redirect to sign in page
-      navigate('/signin');
+      if (success) {
+        toast.success('Account created successfully!', {
+          description: 'Welcome to WasteExchange',
+        });
+        
+        // Redirect to home page after successful signup
+        navigate('/');
+      } else {
+        setError('Failed to create account. Please try again.');
+      }
     } catch (err) {
       setError('An error occurred during sign up. Please try again.');
       console.error('Sign up error:', err);

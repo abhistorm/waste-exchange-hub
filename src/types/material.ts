@@ -27,4 +27,17 @@ export interface Material {
     phone?: string;
   };
   tags?: string[];
+  userId?: number; // ID of user who created the material
+  isApproved?: boolean; // For admin approval workflow
+  adminNotes?: string; // Admin feedback on listings
+}
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: 'user' | 'admin';
+  dateJoined: Date;
+  isVerified: boolean;
+  listings?: number; // Count of user's listed materials
 }

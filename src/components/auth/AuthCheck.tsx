@@ -5,12 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { LogIn, UserPlus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-// Mock authentication helper
-// In a real app, this would use your auth system
-const isAuthenticated = () => {
-  return localStorage.getItem('isAuthenticated') === 'true';
-};
+import { useAuth } from '@/contexts/AuthContext';
 
 interface AuthCheckProps {
   children: React.ReactNode;
@@ -21,9 +16,10 @@ const AuthCheck = ({ children }: AuthCheckProps) => {
   const [redirectToSignUp, setRedirectToSignUp] = useState(false);
   const location = useLocation();
   const { toast } = useToast();
+  const { isAuthenticated } = useAuth();
 
   // If already authenticated, render children
-  if (isAuthenticated()) {
+  if (isAuthenticated) {
     return <>{children}</>;
   }
 
