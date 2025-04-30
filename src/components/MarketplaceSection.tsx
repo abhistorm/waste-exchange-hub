@@ -1,170 +1,11 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import MaterialCard from './MaterialCard';
 import { Search, Filter, ArrowRight, Tag, Gavel } from 'lucide-react';
-import { AuctionItem } from '@/types/auction';
 import { Material } from '@/types/material';
 import MaterialListingForm from './MaterialListingForm';
-
-// Sample auctions data
-const auctionData: AuctionItem[] = [
-  {
-    id: 1,
-    materialId: 3,
-    startingPrice: 0.60,
-    currentBid: 0.75,
-    minBidIncrement: 0.05,
-    endTime: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
-    highestBidderId: 101,
-    bids: [
-      { id: 1, bidderId: 101, bidderName: "Green Recycling Co.", amount: 0.75, timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000) },
-      { id: 2, bidderId: 102, bidderName: "EcoPlastics Inc.", amount: 0.70, timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000) },
-      { id: 3, bidderId: 103, bidderName: "ReuseTech", amount: 0.65, timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000) }
-    ],
-    status: 'active'
-  },
-  {
-    id: 2,
-    materialId: 6,
-    startingPrice: 0.10,
-    currentBid: 0.20,
-    minBidIncrement: 0.02,
-    endTime: new Date(Date.now() + 8 * 60 * 60 * 1000), // 8 hours from now
-    highestBidderId: 105,
-    bids: [
-      { id: 4, bidderId: 105, bidderName: "GlassMasters", amount: 0.20, timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000) },
-      { id: 5, bidderId: 106, bidderName: "ClearCraft", amount: 0.18, timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000) },
-    ],
-    status: 'active'
-  },
-  {
-    id: 3,
-    materialId: 2,
-    startingPrice: 7.50,
-    currentBid: 8.75,
-    minBidIncrement: 0.25,
-    endTime: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000), // 4 days from now
-    highestBidderId: 110,
-    bids: [
-      { id: 6, bidderId: 110, bidderName: "WoodWorks", amount: 8.75, timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000) },
-      { id: 7, bidderId: 111, bidderName: "PalletPro", amount: 8.50, timestamp: new Date(Date.now() - 14 * 60 * 60 * 1000) },
-      { id: 8, bidderId: 112, bidderName: "EcoFurnish", amount: 8.00, timestamp: new Date(Date.now() - 18 * 60 * 60 * 1000) },
-      { id: 9, bidderId: 113, bidderName: "ReclaimCo", amount: 7.75, timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000) }
-    ],
-    status: 'active'
-  }
-];
-
-// Sample materials data
-const materialData: Material[] = [
-  {
-    id: 1,
-    title: "Metal Scraps - Aluminum",
-    category: "Metals",
-    description: "High-quality aluminum scraps from manufacturing process. Clean and sorted by type.",
-    price: 1.20,
-    quantity: "2 tons available",
-    location: "Chicago, IL",
-    isRecyclable: true,
-    isAuction: false,
-    seller: {
-      id: 101,
-      name: "MetalWorks Industries",
-      rating: 4.8
-    },
-    dateAdded: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81"
-  },
-  {
-    id: 2,
-    title: "Wood Pallets - Untreated",
-    category: "Wood",
-    description: "Standard size untreated wood pallets in good condition. Perfect for upcycling projects.",
-    price: 8.50,
-    quantity: "75 units",
-    location: "Denver, CO",
-    isRecyclable: true,
-    isAuction: true,
-    seller: {
-      id: 102,
-      name: "WoodReuse Solutions",
-      rating: 4.5
-    },
-    dateAdded: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
-  },
-  {
-    id: 3,
-    title: "Plastic Resin - HDPE",
-    category: "Plastics",
-    description: "Post-industrial HDPE plastic resin, clean and ready for reprocessing.",
-    price: 0.75,
-    quantity: "1.5 tons available",
-    location: "Atlanta, GA",
-    isRecyclable: true,
-    isAuction: true,
-    seller: {
-      id: 103,
-      name: "PlasticsRecycle Inc",
-      rating: 4.7
-    },
-    dateAdded: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-    image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b"
-  },
-  {
-    id: 4,
-    title: "Textile Offcuts - Cotton",
-    category: "Textiles",
-    description: "Cotton fabric scraps from garment manufacturing. Various colors and sizes.",
-    price: 2.15,
-    quantity: "500 lbs available",
-    location: "Los Angeles, CA",
-    isRecyclable: true,
-    isAuction: false,
-    seller: {
-      id: 104,
-      name: "FabricCycle",
-      rating: 4.3
-    },
-    dateAdded: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81"
-  },
-  {
-    id: 5,
-    title: "E-Waste - Circuit Boards",
-    category: "Electronics",
-    description: "Used circuit boards from electronic devices. Contains valuable materials.",
-    price: 3.80,
-    quantity: "200 lbs available",
-    location: "Boston, MA",
-    isRecyclable: true,
-    isAuction: false,
-    seller: {
-      id: 105,
-      name: "TechRecycle Inc",
-      rating: 4.9
-    },
-    dateAdded: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-    image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b"
-  },
-  {
-    id: 6,
-    title: "Glass Cullet - Mixed Colors",
-    category: "Glass",
-    description: "Mixed color glass cullet suitable for recycling or artistic projects.",
-    price: 0.15,
-    quantity: "3 tons available",
-    location: "Seattle, WA",
-    isRecyclable: true,
-    isAuction: true,
-    seller: {
-      id: 106,
-      name: "GlassMasters",
-      rating: 4.4
-    },
-    dateAdded: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
-  }
-];
+import { mockMaterials, auctionData } from '@/lib/mock-data';
 
 // Material categories for filtering
 const categories = [
@@ -176,7 +17,8 @@ const categories = [
   "Electronics",
   "Glass",
   "Paper",
-  "Chemicals"
+  "Chemicals",
+  "Rubber"
 ];
 
 // Listing types
@@ -187,14 +29,15 @@ const listingTypes = [
 ];
 
 const MarketplaceSection = () => {
-  const [materials, setMaterials] = useState([...materialData]);
+  const [materials, setMaterials] = useState<Material[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedListingType, setSelectedListingType] = useState("All Listings");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   // Merge auctions with materials
   const materialsWithAuctions = useMemo(() => {
-    return materialData.map(material => {
+    return mockMaterials.map(material => {
       if (material.isAuction) {
         const auctionItem = auctionData.find(auction => auction.materialId === material.id);
         return { ...material, auction: auctionItem };
@@ -202,6 +45,17 @@ const MarketplaceSection = () => {
       return material;
     });
   }, []);
+  
+  // Simulate API fetch on component mount
+  useEffect(() => {
+    setIsLoading(true);
+    
+    // Simulate API delay
+    setTimeout(() => {
+      setMaterials(materialsWithAuctions);
+      setIsLoading(false);
+    }, 800);
+  }, [materialsWithAuctions]);
   
   // Filter materials based on search, category, and listing type
   useEffect(() => {
@@ -302,35 +156,41 @@ const MarketplaceSection = () => {
         </div>
         
         {/* Materials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {materials.length > 0 ? (
-            materials.map((material, index) => (
-              <MaterialCard key={material.id} material={material} index={index} />
-            ))
-          ) : (
-            <div className="col-span-full text-center py-12">
-              <p className="text-gray-500 text-lg mb-4">No materials found matching your criteria.</p>
-              <button 
-                className="text-primary hover:underline flex items-center mx-auto"
-                onClick={() => {
-                  setSelectedCategory("All");
-                  setSelectedListingType("All Listings");
-                  setSearchQuery("");
-                }}
-              >
-                Clear filters
-              </button>
-            </div>
-          )}
-        </div>
+        {isLoading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {materials.length > 0 ? (
+              materials.map((material, index) => (
+                <MaterialCard key={material.id} material={material} index={index} />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500 text-lg mb-4">No materials found matching your criteria.</p>
+                <button 
+                  className="text-primary hover:underline flex items-center mx-auto"
+                  onClick={() => {
+                    setSelectedCategory("All");
+                    setSelectedListingType("All Listings");
+                    setSearchQuery("");
+                  }}
+                >
+                  Clear filters
+                </button>
+              </div>
+            )}
+          </div>
+        )}
         
         {/* View More Button */}
         {materials.length > 0 && (
           <div className="mt-12 text-center">
-            <button className="inline-flex items-center gap-2 text-primary font-medium hover:underline transition-colors group">
+            <Link to="/material-marketplace" className="inline-flex items-center gap-2 text-primary font-medium hover:underline transition-colors group">
               View All Materials
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </button>
+            </Link>
           </div>
         )}
       </div>

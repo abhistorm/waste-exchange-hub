@@ -9,9 +9,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { useForm } from 'react-hook-form';
 import { useToast } from '@/hooks/use-toast';
-import { Plus } from 'lucide-react';
+import { Plus, Upload } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { Material } from '@/types/material';
 
 // Form schema validation
 const formSchema = z.object({
@@ -23,6 +24,10 @@ const formSchema = z.object({
   location: z.string().min(1, { message: "Please enter a location" }),
   isRecyclable: z.boolean().default(true),
   isAuction: z.boolean().default(false),
+  tags: z.string().optional(),
+  contactEmail: z.string().email({ message: "Please enter a valid email" }).optional().or(z.literal('')),
+  contactPhone: z.string().optional(),
+  image: z.any().optional()
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -36,11 +41,17 @@ const categories = [
   "Electronics",
   "Glass",
   "Paper",
-  "Chemicals"
+  "Chemicals",
+  "Rubber"
 ];
 
-const MaterialListingForm = () => {
+interface MaterialListingFormProps {
+  onMaterialAdded?: (material: Material) => void;
+}
+
+const MaterialListingForm = ({ onMaterialAdded }: MaterialListingFormProps) => {
   const [open, setOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const { toast } = useToast();
   
   const form = useForm<FormValues>({
@@ -53,21 +64,80 @@ const MaterialListingForm = () => {
       quantity: "",
       location: "",
       isRecyclable: true,
-      isAuction: false
+      isAuction: false,
+      tags: "",
+      contactEmail: "",
+      contactPhone: "",
     }
   });
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Set the file in form data
+      form.setValue("image", file);
+      
+      // Create a preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const onSubmit = (data: FormValues) => {
     // In a real app, this would send the data to your backend
     console.log("Material listing data:", data);
+    
+    // Create the material object
+    const newMaterial: Partial<Material> = {
+      title: data.title,
+      description: data.description,
+      category: data.category,
+      price: data.price,
+      quantity: data.quantity,
+      location: data.location,
+      isRecyclable: data.isRecyclable,
+      isAuction: data.isAuction,
+      seller: {
+        id: 201, // In a real app, this would be the current user's ID
+        name: "Current User", // Would be the logged-in user's name
+        rating: 5.0 // New seller default
+      },
+      dateAdded: new Date(),
+      image: previewImage || undefined,
+      status: 'available',
+      views: 0
+    };
+    
+    // Add tags if provided
+    if (data.tags) {
+      newMaterial.tags = data.tags.split(',').map(tag => tag.trim());
+    }
+    
+    // Add contact info if provided
+    if (data.contactEmail || data.contactPhone) {
+      newMaterial.contactInfo = {
+        email: data.contactEmail || undefined,
+        phone: data.contactPhone || undefined
+      };
+    }
+    
+    // Call the callback if provided
+    if (onMaterialAdded) {
+      onMaterialAdded(newMaterial as Material);
+    }
     
     toast({
       title: "Material listed successfully",
       description: "Your material has been listed on the marketplace.",
     });
     
+    // Reset the form and close the dialog
     setOpen(false);
     form.reset();
+    setPreviewImage(null);
   };
 
   return (
@@ -88,6 +158,58 @@ const MaterialListingForm = () => {
         
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Image Upload */}
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field: { value, onChange, ...fieldProps } }) => (
+                <FormItem>
+                  <FormLabel>Material Image</FormLabel>
+                  <FormControl>
+                    <div className="flex flex-col items-center justify-center">
+                      {previewImage ? (
+                        <div className="relative mb-4">
+                          <img
+                            src={previewImage}
+                            alt="Preview"
+                            className="w-full h-48 object-cover rounded-md"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="absolute top-2 right-2"
+                            onClick={() => setPreviewImage(null)}
+                          >
+                            Change
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="border-2 border-dashed border-gray-300 rounded-md p-6 mb-4 text-center">
+                          <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                          <div className="mt-2">
+                            <label htmlFor="image-upload" className="cursor-pointer text-blue-600 hover:underline">
+                              Upload an image
+                            </label>
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 5MB</p>
+                        </div>
+                      )}
+                      <input
+                        id="image-upload"
+                        type="file"
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        {...fieldProps}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
             <FormField
               control={form.control}
               name="title"
@@ -190,6 +312,53 @@ const MaterialListingForm = () => {
                     <FormLabel>Location</FormLabel>
                     <FormControl>
                       <Input placeholder="City, State" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tags (comma separated)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="E.g. metal, aluminum, clean" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Add relevant tags to help buyers find your material.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="contactEmail"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Contact Email (optional)</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="your@email.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="contactPhone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Contact Phone (optional)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="+91 98765 43210" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

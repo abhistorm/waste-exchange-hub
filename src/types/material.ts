@@ -19,4 +19,11 @@ export interface Material {
   dateAdded: Date;
   image?: string;
   auction?: AuctionItem;
+  status?: 'available' | 'pending' | 'sold';
+  views?: number;
+  contactInfo?: {
+    email?: string;
+    phone?: string;
+  };
+  tags?: string[];
 }

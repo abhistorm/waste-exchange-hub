@@ -1,144 +1,53 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Material } from '@/types/material';
-
-// Mock material data
-const mockMaterials: Material[] = [
-  {
-    id: 1,
-    title: "Plastic Bottles (PET)",
-    description: "Clean plastic bottles, labels removed, caps separate.",
-    category: "Plastics",
-    price: 25.00,
-    quantity: "50kg",
-    location: "Mumbai",
-    isRecyclable: true,
-    isAuction: false,
-    seller: {
-      id: 101,
-      name: "Green Recyclers Ltd",
-      rating: 4.8
-    },
-    dateAdded: new Date(2023, 6, 10)
-  },
-  {
-    id: 2,
-    title: "Copper Wire Scrap",
-    description: "Electrical copper wire, clean and stripped of insulation.",
-    category: "Metals",
-    price: 350.00,
-    quantity: "10kg",
-    location: "Delhi",
-    isRecyclable: true,
-    isAuction: false,
-    seller: {
-      id: 102,
-      name: "MetalWorks Industries",
-      rating: 4.5
-    },
-    dateAdded: new Date(2023, 6, 15)
-  },
-  {
-    id: 3,
-    title: "Mixed Paper Waste",
-    description: "Newspapers, magazines, and cardboard packaging.",
-    category: "Paper",
-    price: 15.00,
-    quantity: "100kg",
-    location: "Pune",
-    isRecyclable: true,
-    isAuction: false,
-    seller: {
-      id: 103,
-      name: "PaperCycle Co",
-      rating: 4.2
-    },
-    dateAdded: new Date(2023, 6, 18)
-  },
-  {
-    id: 4,
-    title: "Glass Bottles",
-    description: "Clear glass bottles, cleaned and sorted by color.",
-    category: "Glass",
-    price: 20.00,
-    quantity: "30kg",
-    location: "Chennai",
-    isRecyclable: true,
-    isAuction: false,
-    seller: {
-      id: 104,
-      name: "GlassWorks Recycling",
-      rating: 4.6
-    },
-    dateAdded: new Date(2023, 6, 20)
-  },
-  {
-    id: 5,
-    title: "Wood Pallets",
-    description: "Used wooden shipping pallets in good condition.",
-    category: "Wood",
-    price: 120.00,
-    quantity: "15 units",
-    location: "Bangalore",
-    isRecyclable: true,
-    isAuction: true,
-    seller: {
-      id: 105,
-      name: "WoodReuse Solutions",
-      rating: 4.3
-    },
-    dateAdded: new Date(2023, 6, 25)
-  },
-  {
-    id: 6,
-    title: "E-waste Components",
-    description: "Computer parts, circuit boards, and cables.",
-    category: "Electronics",
-    price: 200.00,
-    quantity: "25kg",
-    location: "Hyderabad",
-    isRecyclable: true,
-    isAuction: false,
-    seller: {
-      id: 106,
-      name: "TechRecycle Inc",
-      rating: 4.7
-    },
-    dateAdded: new Date(2023, 6, 28)
-  }
-];
+import { mockMaterials, auctionData } from '@/lib/mock-data';
 
 export const useMaterialMarketplace = () => {
-  const [materials, setMaterials] = useState<Material[]>(mockMaterials);
-  const [filteredMaterials, setFilteredMaterials] = useState<Material[]>(mockMaterials);
+  const [materials, setMaterials] = useState<Material[]>([]);
+  const [filteredMaterials, setFilteredMaterials] = useState<Material[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Simulate loading state
+  // Merge auctions with materials
+  const materialsWithAuctions = useMemo(() => {
+    return mockMaterials.map(material => {
+      if (material.isAuction) {
+        const auctionItem = auctionData.find(auction => auction.materialId === material.id);
+        return { ...material, auction: auctionItem };
+      }
+      return material;
+    });
+  }, []);
+
+  // Simulate loading state and fetch data
   useEffect(() => {
     const timer = setTimeout(() => {
+      setMaterials(materialsWithAuctions);
+      setFilteredMaterials(materialsWithAuctions);
       setIsLoaded(true);
-    }, 300);
+    }, 800);
     
     return () => clearTimeout(timer);
-  }, []);
+  }, [materialsWithAuctions]);
 
   // Handle search
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    applyFilters();
+    applyFilters(query);
   };
 
   // Apply filters and search
-  const applyFilters = () => {
+  const applyFilters = (query = searchQuery) => {
     let filtered = [...materials];
     
     // Apply search query if exists
-    if (searchQuery) {
+    if (query) {
       filtered = filtered.filter(m => 
-        m.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        m.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        m.category.toLowerCase().includes(searchQuery.toLowerCase())
+        m.title.toLowerCase().includes(query.toLowerCase()) ||
+        m.description.toLowerCase().includes(query.toLowerCase()) ||
+        m.category.toLowerCase().includes(query.toLowerCase()) ||
+        m.location.toLowerCase().includes(query.toLowerCase())
       );
     }
     
@@ -159,7 +68,8 @@ export const useMaterialMarketplace = () => {
       filtered = filtered.filter(m => 
         m.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         m.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        m.category.toLowerCase().includes(searchQuery.toLowerCase())
+        m.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        m.location.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
     
@@ -193,14 +103,31 @@ export const useMaterialMarketplace = () => {
         break;
       case "quantity":
         // This is just for demonstration as quantity is a string
-        // In a real app, you might want to parse this to a number
         filtered.sort((a, b) => a.quantity.localeCompare(b.quantity));
         break;
       default:
+        filtered.sort((a, b) => b.dateAdded.getTime() - a.dateAdded.getTime());
         break;
     }
     
     setFilteredMaterials(filtered);
+  };
+
+  // Handle adding a new material
+  const handleAddMaterial = (material: Material) => {
+    // In a real app, this would send data to an API
+    // Here we're just updating the local state
+    const newMaterial = {
+      ...material,
+      id: materials.length + 1,
+      dateAdded: new Date(),
+      views: 0
+    };
+    
+    setMaterials(prev => [newMaterial, ...prev]);
+    setFilteredMaterials(prev => [newMaterial, ...prev]);
+    
+    return newMaterial;
   };
 
   return {
@@ -208,6 +135,7 @@ export const useMaterialMarketplace = () => {
     filteredMaterials,
     isLoaded,
     handleSearch,
-    handleFilterSort
+    handleFilterSort,
+    handleAddMaterial
   };
 };

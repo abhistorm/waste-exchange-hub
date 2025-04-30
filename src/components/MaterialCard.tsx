@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Package, DollarSign, Recycle, Map, Gavel } from 'lucide-react';
 import AuctionBadge from './AuctionBadge';
@@ -33,7 +34,8 @@ export const MaterialCard = ({ material, index = 0, className }: MaterialCardPro
     setIsAuctionModalOpen(false);
   };
 
-  const openAuctionDetails = () => {
+  const openAuctionDetails = (e: React.MouseEvent) => {
+    e.preventDefault();
     if (material.isAuction && material.auction) {
       setIsAuctionModalOpen(true);
     }
@@ -50,8 +52,8 @@ export const MaterialCard = ({ material, index = 0, className }: MaterialCardPro
       )}
       style={{ animationDelay }}
     >
-      {/* Image */}
-      <div className="relative h-48 overflow-hidden">
+      {/* Image with Link */}
+      <Link to={`/material/${material.id}`} className="block relative h-48 overflow-hidden">
         <img 
           src={imageUrl} 
           alt={material.title}
@@ -81,13 +83,24 @@ export const MaterialCard = ({ material, index = 0, className }: MaterialCardPro
             />
           </div>
         )}
-      </div>
+
+        {/* Status badge if available */}
+        {material.status && material.status !== 'available' && (
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <span className="px-3 py-1 bg-white text-black font-medium rounded uppercase text-sm">
+              {material.status}
+            </span>
+          </div>
+        )}
+      </Link>
 
       {/* Content */}
       <div className="p-5">
-        <h3 className="text-lg font-semibold mb-2 text-gray-900 group-hover:text-primary transition-colors duration-300">
-          {material.title}
-        </h3>
+        <Link to={`/material/${material.id}`} className="block">
+          <h3 className="text-lg font-semibold mb-2 text-gray-900 group-hover:text-primary transition-colors duration-300">
+            {material.title}
+          </h3>
+        </Link>
         
         <p className="text-gray-600 text-sm mb-4 line-clamp-2">
           {material.description}
@@ -108,7 +121,7 @@ export const MaterialCard = ({ material, index = 0, className }: MaterialCardPro
             ) : (
               <>
                 <DollarSign className="h-4 w-4 mr-1" />
-                <span className="font-semibold">${material.price}</span>
+                <span className="font-semibold">${material.price.toFixed(2)}</span>
                 <span className="text-xs text-gray-500 ml-1">/ unit</span>
               </>
             )}
@@ -128,14 +141,17 @@ export const MaterialCard = ({ material, index = 0, className }: MaterialCardPro
       
       {/* Footer */}
       <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
-        <button 
+        <Link 
+          to={`/material/${material.id}`}
           className="text-sm font-medium text-primary hover:underline transition-all"
-          onClick={() => material.isAuction ? openAuctionDetails() : null}
         >
-          {material.isAuction ? "View Auction" : "View Details"}
-        </button>
-        <button className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors">
-          {material.isAuction ? "Watch Auction" : "Contact Seller"}
+          View Details
+        </Link>
+        <button 
+          className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+          onClick={material.isAuction ? openAuctionDetails : undefined}
+        >
+          {material.isAuction ? "View Auction" : "Contact Seller"}
         </button>
       </div>
       
