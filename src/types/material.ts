@@ -20,6 +20,7 @@ export interface Material {
   image?: string;
   auction?: AuctionItem;
   status?: 'available' | 'pending' | 'sold';
+  condition?: 'new' | 'like-new' | 'good' | 'fair' | 'poor';
   views?: number;
   contactInfo?: {
     email?: string;

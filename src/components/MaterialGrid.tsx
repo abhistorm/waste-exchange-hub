@@ -2,6 +2,7 @@
 import React from 'react';
 import MaterialCard from '@/components/MaterialCard';
 import { Material } from '@/types/material';
+import { PackageOpen } from 'lucide-react';
 
 interface MaterialGridProps {
   materials: Material[];
@@ -27,6 +28,9 @@ const MaterialGrid = ({ materials, isLoading = false }: MaterialGridProps) => {
         </div>
       ) : (
         <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <div className="flex justify-center mb-4">
+            <PackageOpen className="h-12 w-12 text-gray-400" />
+          </div>
           <p className="text-gray-500 dark:text-gray-400 text-lg">No materials match your current filters.</p>
           <p className="text-gray-400 dark:text-gray-500 mt-2">Try changing your filter settings or list your own materials.</p>
         </div>

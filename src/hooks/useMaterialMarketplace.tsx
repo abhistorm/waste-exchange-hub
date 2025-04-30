@@ -59,7 +59,8 @@ export const useMaterialMarketplace = () => {
     selectedCategories: string[],
     priceRange: [number, number],
     locations: string[],
-    sortOption: string
+    sortOption: string,
+    conditions?: string[]
   ) => {
     let filtered = [...materials];
     
@@ -87,6 +88,13 @@ export const useMaterialMarketplace = () => {
     if (locations.length > 0) {
       filtered = filtered.filter(m => 
         locations.some(loc => m.location.toLowerCase().includes(loc.toLowerCase()))
+      );
+    }
+    
+    // Apply condition filter if provided
+    if (conditions && conditions.length > 0 && conditions[0] !== 'all') {
+      filtered = filtered.filter(m => 
+        m.condition && conditions.includes(m.condition)
       );
     }
     
