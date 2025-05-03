@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { MaterialGrid } from '@/components/MaterialGrid';
+import MaterialGrid from '@/components/MaterialGrid';
 import { Material } from '@/types/material';
 import { mockMaterials } from '@/lib/mock-data';
 
