@@ -12,7 +12,7 @@ import ArtisanMarketplace from '@/components/ArtisanMarketplace';
 import { Toaster } from '@/components/ui/toaster';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, DollarSign, Recycle, Paintbrush } from 'lucide-react';
+import { Recycle, Lightbulb, UserPlus, LogIn } from 'lucide-react';
 
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -38,33 +38,27 @@ const Index = () => {
         <MarketplaceSection />
         <ArtisanMarketplace />
         
-        {/* Marketplace CTA Section */}
-        <section className="py-12 bg-emerald-50 dark:bg-emerald-950/20">
+        {/* Auth CTA Section */}
+        <section className="py-12 bg-indigo-50 dark:bg-indigo-950/20">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-2xl md:text-3xl font-bold mb-4">
-              Explore Our Marketplaces
+              Join Our Sustainable Community
             </h2>
             <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
-              Whether you're looking to buy unique recycled products, sell your waste materials, 
-              or showcase your artisan skills, we have the perfect marketplace for you.
+              Create an account to buy materials, contact sellers, list your own waste materials,
+              and help build a more sustainable future.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link to="/store">
+              <Link to="/signup">
                 <Button size="lg" className="gap-2">
-                  <ShoppingBag className="h-5 w-5" />
-                  Recycled Products
+                  <UserPlus className="h-5 w-5" />
+                  Sign Up Now
                 </Button>
               </Link>
-              <Link to="/material-marketplace">
+              <Link to="/signin">
                 <Button size="lg" variant="outline" className="gap-2">
-                  <Recycle className="h-5 w-5" />
-                  Waste Materials
-                </Button>
-              </Link>
-              <Link to="/local-rates">
-                <Button size="lg" variant="outline" className="gap-2">
-                  <DollarSign className="h-5 w-5" />
-                  Local Scrap Rates
+                  <LogIn className="h-5 w-5" />
+                  Sign In
                 </Button>
               </Link>
             </div>
@@ -73,6 +67,32 @@ const Index = () => {
         
         <ProcessSteps />
         <Benefits />
+        
+        {/* AI Solutions CTA */}
+        <section className="py-12 bg-emerald-50 dark:bg-emerald-950/20">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              Explore Our AI-Powered Solutions
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
+              Use our advanced tools to analyze materials, calculate environmental impact, and get personalized recycling advice.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link to="/recycling-tips">
+                <Button size="lg" className="gap-2 bg-emerald-600 hover:bg-emerald-700">
+                  <Lightbulb className="h-5 w-5" />
+                  Get Recycling Tips
+                </Button>
+              </Link>
+              <Link to="/material-marketplace">
+                <Button size="lg" variant="outline" className="gap-2">
+                  <Recycle className="h-5 w-5" />
+                  Browse Marketplace
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
       </main>
       
       {/* Carbon Calculator accessible through a button in footer or elsewhere */}

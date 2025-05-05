@@ -7,12 +7,23 @@ import AuthCheck from './AuthCheck';
 interface ProtectedRouteProps {
   children: React.ReactNode;
   adminOnly?: boolean;
+  requireAuthForActions?: boolean; // New prop for partial auth
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, adminOnly = false }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
+  children, 
+  adminOnly = false,
+  requireAuthForActions = false // Default to false
+}) => {
   const { isAuthenticated, isAdmin } = useAuth();
   
-  // If not authenticated, show AuthCheck
+  // If requireAuthForActions is true, we allow viewing but restrict actions in the child components
+  if (requireAuthForActions) {
+    // Pass through the auth state to the children
+    return <>{children}</>;
+  }
+  
+  // Regular auth check for fully protected routes
   if (!isAuthenticated) {
     return <AuthCheck>{children}</AuthCheck>;
   }

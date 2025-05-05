@@ -20,6 +20,7 @@ import CarbonCalculator from "./pages/CarbonCalculator";
 import RecyclingTips from "./pages/RecyclingTips";
 import Checkout from "./pages/Checkout";
 import MaterialMarketplace from "./pages/MaterialMarketplace";
+import MaterialDetails from "./pages/MaterialDetails";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
@@ -42,16 +43,23 @@ const App = () => (
               <Route path="/signup" element={<SignUp />} />
               <Route path="/local-rates" element={<LocalRates />} />
               
-              {/* Protected Routes */}
-              <Route path="/checkout" element={
-                <ProtectedRoute>
-                  <Checkout />
+              {/* Protected Routes for actions, but viewable by all */}
+              <Route path="/material-marketplace" element={
+                <ProtectedRoute requireAuthForActions={true}>
+                  <MaterialMarketplace />
                 </ProtectedRoute>
               } />
               
-              <Route path="/material-marketplace" element={
+              <Route path="/material-details/:id" element={
+                <ProtectedRoute requireAuthForActions={true}>
+                  <MaterialDetails />
+                </ProtectedRoute>
+              } />
+              
+              {/* Fully Protected Routes */}
+              <Route path="/checkout" element={
                 <ProtectedRoute>
-                  <MaterialMarketplace />
+                  <Checkout />
                 </ProtectedRoute>
               } />
               

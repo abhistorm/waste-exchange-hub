@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Menu, X, Bot, Shield, ShoppingBag, Package, Paintbrush } from 'lucide-react';
+import { Menu, X, Bot, Shield, ShoppingBag, User } from 'lucide-react';
 import Logo from './navbar/Logo';
 import DesktopNav from './navbar/DesktopNav';
 import ActionButtons from './navbar/ActionButtons';
@@ -58,19 +58,6 @@ export const Navbar = () => {
 
         {/* Desktop Navigation */}
         <DesktopNav />
-
-        {/* Marketplace links */}
-        <div className="hidden md:flex items-center space-x-2 mr-4">
-          <Link to="/material-marketplace" className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-emerald-600 transition-colors">
-            <Package className="h-4 w-4" />
-            <span>Materials</span>
-          </Link>
-          <span className="text-gray-300">|</span>
-          <Link to="/artisan-marketplace" className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-emerald-600 transition-colors">
-            <Paintbrush className="h-4 w-4" />
-            <span>Artisan</span>
-          </Link>
-        </div>
 
         {/* Action Buttons */}
         <ActionButtons />

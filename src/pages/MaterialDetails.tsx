@@ -11,7 +11,9 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import AuctionBadge from '@/components/AuctionBadge';
 import AuctionDetails from '@/components/AuctionDetails';
-import { Calendar, DollarSign, MapPin, Package, Recycle, Tag, ArrowLeft, Phone, Mail } from 'lucide-react';
+import { Calendar, DollarSign, MapPin, Package, Recycle, Tag, ArrowLeft, Phone, Mail, LogIn, UserPlus } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 // This would typically come from an API
 import { mockMaterials } from '@/lib/mock-data';
@@ -24,6 +26,7 @@ const MaterialDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isContactVisible, setIsContactVisible] = useState(false);
   const [isAuctionModalOpen, setIsAuctionModalOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
   
   useEffect(() => {
     // Simulate API call to fetch material details
@@ -42,6 +45,16 @@ const MaterialDetails = () => {
   }, [id]);
   
   const handleContactSeller = () => {
+    if (!isAuthenticated) {
+      // Redirect to login page if not authenticated
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to contact the seller",
+      });
+      navigate('/signin', { state: { from: `/material-details/${id}` } });
+      return;
+    }
+    
     setIsContactVisible(true);
     
     // In a real app, this might log the contact request
@@ -53,6 +66,16 @@ const MaterialDetails = () => {
   
   const handlePlaceBid = (bidAmount: number) => {
     if (!material?.auction) return;
+    
+    if (!isAuthenticated) {
+      // Redirect to login page if not authenticated
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to place a bid",
+      });
+      navigate('/signin', { state: { from: `/material-details/${id}` } });
+      return;
+    }
     
     toast({
       title: "Bid placed successfully!",
@@ -88,7 +111,7 @@ const MaterialDetails = () => {
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
       <Navbar />
       
-      <main className="flex-grow container mx-auto px-4 py-8">
+      <main className="flex-grow container mx-auto px-4 py-8 mt-16">
         <Button
           variant="ghost" 
           className="mb-6 flex items-center gap-1"
@@ -217,33 +240,59 @@ const MaterialDetails = () => {
               
               {/* Action Buttons */}
               <div className="space-y-3">
-                {material.isAuction && material.auction ? (
-                  <Button 
-                    className="w-full bg-emerald-600 hover:bg-emerald-700"
-                    onClick={() => setIsAuctionModalOpen(true)}
-                  >
-                    View Auction Details
-                  </Button>
+                {isAuthenticated ? (
+                  // Show action buttons for authenticated users
+                  <>
+                    {material.isAuction && material.auction ? (
+                      <Button 
+                        className="w-full bg-emerald-600 hover:bg-emerald-700"
+                        onClick={() => setIsAuctionModalOpen(true)}
+                      >
+                        View Auction Details
+                      </Button>
+                    ) : (
+                      <Button 
+                        className="w-full"
+                        onClick={handleContactSeller}
+                      >
+                        Contact Seller
+                      </Button>
+                    )}
+                    
+                    <Button variant="outline" className="w-full">
+                      Save Material
+                    </Button>
+                    
+                    <Button variant="outline" className="w-full">
+                      Report Listing
+                    </Button>
+                  </>
                 ) : (
-                  <Button 
-                    className="w-full"
-                    onClick={handleContactSeller}
-                  >
-                    Contact Seller
-                  </Button>
+                  // Show sign in/sign up prompts for non-authenticated users
+                  <>
+                    <div className="text-center p-3 bg-gray-50 dark:bg-gray-800 rounded-md mb-3">
+                      <p className="text-sm mb-3">Sign in to contact the seller or place a bid</p>
+                      <div className="flex gap-2 justify-center">
+                        <Link to={`/signin?redirect=/material-details/${id}`}>
+                          <Button size="sm" className="flex items-center gap-1">
+                            <LogIn className="h-4 w-4" />
+                            Sign In
+                          </Button>
+                        </Link>
+                        <Link to={`/signup?redirect=/material-details/${id}`}>
+                          <Button size="sm" variant="outline" className="flex items-center gap-1">
+                            <UserPlus className="h-4 w-4" />
+                            Sign Up
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </>
                 )}
-                
-                <Button variant="outline" className="w-full">
-                  Save Material
-                </Button>
-                
-                <Button variant="outline" className="w-full">
-                  Report Listing
-                </Button>
               </div>
               
               {/* Contact Info (conditionally visible) */}
-              {isContactVisible && material.contactInfo && (
+              {isAuthenticated && isContactVisible && material.contactInfo && (
                 <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                   <h4 className="font-medium mb-3">Contact Information</h4>
                   {material.contactInfo.email && (
