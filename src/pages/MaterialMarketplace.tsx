@@ -19,7 +19,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import AuthCheck from '@/components/auth/AuthCheck';
 
 const MaterialMarketplace = () => {
   const {
@@ -39,6 +38,15 @@ const MaterialMarketplace = () => {
   const { isAuthenticated, isAdmin } = useAuth();
   
   const onMaterialAdded = (material: any) => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to list materials.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     const newMaterial = handleAddMaterial(material);
     toast({
       title: "Material Listed Successfully",
@@ -48,6 +56,15 @@ const MaterialMarketplace = () => {
   };
   
   const onDeleteClick = (materialId: number) => {
+    if (!isAuthenticated || !isAdmin) {
+      toast({
+        title: "Permission Denied",
+        description: "You need admin privileges to delete materials.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setMaterialToDelete(materialId);
     setIsDeleteDialogOpen(true);
   };
@@ -63,12 +80,6 @@ const MaterialMarketplace = () => {
       setIsDeleteDialogOpen(false);
     }
   };
-
-  if (!isAuthenticated) {
-    return <AuthCheck>
-      <MaterialMarketplace />
-    </AuthCheck>;
-  }
 
   return (
     <StoreLayout isLoaded={isLoaded}>
@@ -150,7 +161,17 @@ const MaterialMarketplace = () => {
                   
                   {isAdmin && (
                     <Button 
-                      onClick={() => document.getElementById('list-materials-button')?.click()}
+                      onClick={() => {
+                        if (isAuthenticated) {
+                          document.getElementById('list-materials-button')?.click();
+                        } else {
+                          toast({
+                            title: "Authentication Required",
+                            description: "Please sign in to list materials.",
+                            variant: "destructive",
+                          });
+                        }
+                      }}
                       variant="outline" 
                       size="sm"
                       className="flex items-center gap-1 border-green-600 text-green-600 hover:bg-green-50"
@@ -175,10 +196,14 @@ const MaterialMarketplace = () => {
                     variant="outline" 
                     className="border-emerald-600 text-emerald-600 hover:bg-emerald-50 dark:border-emerald-500 dark:text-emerald-500 dark:hover:bg-emerald-950/30"
                     onClick={() => {
-                      toast({
-                        title: "List your materials",
-                        description: "Help contribute to the circular economy by listing your own materials.",
-                      });
+                      if (!isAuthenticated) {
+                        toast({
+                          title: "Authentication Required",
+                          description: "Please sign in to list materials.",
+                          variant: "destructive",
+                        });
+                        return;
+                      }
                       document.getElementById('list-materials-button')?.click();
                     }}
                   >
