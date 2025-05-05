@@ -6,10 +6,20 @@ import MaterialGrid from '@/components/MaterialGrid';
 import { Toaster } from '@/components/ui/toaster';
 import { useMaterialMarketplace } from '@/hooks/useMaterialMarketplace';
 import StoreLayout from '@/components/store/StoreLayout';
-import { ArrowLeft, Upload, Filter, Package } from 'lucide-react';
+import { ArrowLeft, Upload, Filter, Package, Shield, PlusCircle, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import AuthCheck from '@/components/auth/AuthCheck';
 
 const MaterialMarketplace = () => {
   const {
@@ -18,20 +28,47 @@ const MaterialMarketplace = () => {
     isLoaded,
     handleSearch,
     handleFilterSort,
-    handleAddMaterial
+    handleAddMaterial,
+    handleDeleteMaterial
   } = useMaterialMarketplace();
   
   const [showFiltersOnMobile, setShowFiltersOnMobile] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [materialToDelete, setMaterialToDelete] = useState<number | null>(null);
   const { toast } = useToast();
+  const { isAuthenticated, isAdmin } = useAuth();
   
   const onMaterialAdded = (material: any) => {
-    handleAddMaterial(material);
+    const newMaterial = handleAddMaterial(material);
     toast({
       title: "Material Listed Successfully",
       description: "Your material has been added to the marketplace.",
       duration: 3000,
     });
   };
+  
+  const onDeleteClick = (materialId: number) => {
+    setMaterialToDelete(materialId);
+    setIsDeleteDialogOpen(true);
+  };
+  
+  const confirmDelete = () => {
+    if (materialToDelete !== null) {
+      handleDeleteMaterial(materialToDelete);
+      toast({
+        title: "Material Deleted",
+        description: "The material has been removed from the marketplace.",
+        duration: 3000,
+      });
+      setIsDeleteDialogOpen(false);
+    }
+  };
+
+  if (!isAuthenticated) {
+    return <AuthCheck>
+      <MaterialMarketplace />
+    </AuthCheck>;
+  }
 
   return (
     <StoreLayout isLoaded={isLoaded}>
@@ -45,6 +82,15 @@ const MaterialMarketplace = () => {
                 Back to Store
               </Button>
             </Link>
+            
+            {isAdmin && (
+              <Link to="/admin" className="ml-auto">
+                <Button variant="outline" size="sm" className="text-white border-amber-300/50 hover:bg-amber-500/20 hover:text-white">
+                  <Shield className="h-4 w-4 mr-1" />
+                  Admin Dashboard
+                </Button>
+              </Link>
+            )}
           </div>
           
           <div className="mt-6">
@@ -97,12 +143,31 @@ const MaterialMarketplace = () => {
                   <Package className="mr-2 h-5 w-5 text-emerald-600" />
                   <h2 className="text-xl font-medium">Available Materials</h2>
                 </div>
-                <p className="text-gray-500 text-sm">
-                  {filteredMaterials.length} {filteredMaterials.length === 1 ? 'item' : 'items'}
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className="text-gray-500 text-sm">
+                    {filteredMaterials.length} {filteredMaterials.length === 1 ? 'item' : 'items'}
+                  </p>
+                  
+                  {isAdmin && (
+                    <Button 
+                      onClick={() => document.getElementById('list-materials-button')?.click()}
+                      variant="outline" 
+                      size="sm"
+                      className="flex items-center gap-1 border-green-600 text-green-600 hover:bg-green-50"
+                    >
+                      <PlusCircle className="h-4 w-4" />
+                      Add Material
+                    </Button>
+                  )}
+                </div>
               </div>
               
-              <MaterialGrid materials={filteredMaterials} isLoading={!isLoaded} />
+              <MaterialGrid 
+                materials={filteredMaterials} 
+                isLoading={!isLoaded} 
+                isAdmin={isAdmin} 
+                onDeleteClick={onDeleteClick}
+              />
               
               {filteredMaterials.length > 0 && (
                 <div className="mt-8 text-center">
@@ -126,6 +191,25 @@ const MaterialMarketplace = () => {
           </div>
         </div>
       </section>
+      
+      {/* Delete confirmation dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Material</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this material? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={confirmDelete}>
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </StoreLayout>
   );
 };

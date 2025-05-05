@@ -15,6 +15,9 @@ export interface Material {
     id: number;
     name: string;
     rating: number;
+    contactEmail?: string;
+    contactPhone?: string;
+    address?: string;
   };
   dateAdded: Date;
   image?: string;
@@ -30,6 +33,9 @@ export interface Material {
   userId?: number; // ID of user who created the material
   isApproved?: boolean; // For admin approval workflow
   adminNotes?: string; // Admin feedback on listings
+  paymentMethod?: 'cash' | 'online' | 'bank_transfer';
+  deliveryOptions?: 'pickup' | 'delivery' | 'shipping';
+  negotiable?: boolean;
 }
 
 export interface User {
@@ -40,4 +46,31 @@ export interface User {
   dateJoined: Date;
   isVerified: boolean;
   listings?: number; // Count of user's listed materials
+  address?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    postalCode?: string;
+    country?: string;
+  }
+  phone?: string;
+}
+
+export interface MaterialOrder {
+  id: number;
+  materialId: number;
+  userId: number;
+  quantity: number;
+  totalPrice: number;
+  orderDate: Date;
+  status: 'pending' | 'processing' | 'completed' | 'cancelled';
+  paymentStatus: 'unpaid' | 'paid' | 'refunded';
+  shippingAddress?: {
+    street: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+  };
+  trackingNumber?: string;
 }

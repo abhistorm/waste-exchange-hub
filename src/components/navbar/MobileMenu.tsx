@@ -1,7 +1,11 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Home, ShoppingBag, UserPlus, LogIn, Bot, DollarSign, MessageCircle, BarChart, Recycle, Lightbulb, User, LogOut, Shield } from 'lucide-react';
+import { 
+  Home, ShoppingBag, UserPlus, LogIn, Bot, DollarSign, 
+  MessageCircle, BarChart, Recycle, Lightbulb, User, 
+  LogOut, Shield, Package, Paintbrush 
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -51,6 +55,27 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
           <ShoppingBag className="mr-2 h-4 w-4" />
           Store
         </Link>
+        
+        <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+          <p className="px-4 py-2 text-sm font-semibold text-gray-500">Marketplaces</p>
+          <Link 
+            to="/material-marketplace"
+            className="px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center"
+            onClick={onClose}
+          >
+            <Package className="mr-2 h-4 w-4 text-emerald-600" />
+            Waste Materials
+          </Link>
+          <Link 
+            to="/artisan-marketplace"
+            className="px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center"
+            onClick={onClose}
+          >
+            <Paintbrush className="mr-2 h-4 w-4 text-indigo-600" />
+            Artisan Products
+          </Link>
+        </div>
+        
         <Link 
           to="/local-rates"
           className="px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors duration-200 flex items-center"

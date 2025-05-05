@@ -56,6 +56,18 @@ const AdminDashboard = () => {
       description: `Material ID ${id} has been ${isApproved ? 'approved' : 'rejected'}.`,
     });
   };
+  
+  // Mock delete material
+  const handleDeleteMaterial = (id: number) => {
+    setMaterials(prevMaterials => 
+      prevMaterials.filter(material => material.id !== id)
+    );
+
+    toast({
+      title: "Material Deleted",
+      description: `Material ID ${id} has been deleted.`,
+    });
+  };
 
   return (
     <AdminLayout>
@@ -198,98 +210,13 @@ const AdminDashboard = () => {
                   </div>
                 </div>
 
-                {/* Material listing with approval actions */}
-                <div className="space-y-4">
-                  {filteredMaterials.map(material => (
-                    <Card key={material.id} className="overflow-hidden">
-                      <div className="flex flex-col md:flex-row">
-                        {material.image && (
-                          <div className="md:w-40 bg-gray-100">
-                            <img 
-                              src={material.image} 
-                              alt={material.title} 
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        )}
-                        <div className="flex-1 p-4">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h3 className="font-semibold">{material.title}</h3>
-                              <p className="text-sm text-gray-600 line-clamp-2">
-                                {material.description}
-                              </p>
-                            </div>
-                            <div>
-                              {material.isApproved === undefined ? (
-                                <span className="px-2 py-1 text-xs rounded bg-gray-100">
-                                  Not reviewed
-                                </span>
-                              ) : material.isApproved ? (
-                                <span className="px-2 py-1 text-xs rounded bg-green-100 text-green-800">
-                                  Approved
-                                </span>
-                              ) : (
-                                <span className="px-2 py-1 text-xs rounded bg-red-100 text-red-800">
-                                  Rejected
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          <div className="mt-2 flex flex-wrap gap-2">
-                            <span className="text-xs px-2 py-1 bg-gray-100 rounded">
-                              {material.category}
-                            </span>
-                            <span className="text-xs px-2 py-1 bg-gray-100 rounded">
-                              ₹{material.price}
-                            </span>
-                            <span className="text-xs px-2 py-1 bg-gray-100 rounded">
-                              {material.location}
-                            </span>
-                          </div>
-                          <div className="mt-4 flex justify-end gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => navigate(`/material/${material.id}`)}
-                            >
-                              View Details
-                            </Button>
-                            {material.isApproved ? (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="border-red-500 text-red-500 hover:bg-red-50"
-                                onClick={() => handleApproveReject(material.id, false)}
-                              >
-                                <XCircle className="h-4 w-4 mr-2" /> Reject
-                              </Button>
-                            ) : (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="border-green-500 text-green-500 hover:bg-green-50"
-                                onClick={() => handleApproveReject(material.id, true)}
-                              >
-                                <CheckCircle className="h-4 w-4 mr-2" /> Approve
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-
-                  {filteredMaterials.length === 0 && (
-                    <div className="text-center py-12">
-                      <Package className="mx-auto h-12 w-12 text-gray-400" />
-                      <h3 className="mt-2 text-sm font-semibold text-gray-900">No materials found</h3>
-                      <p className="mt-1 text-sm text-gray-500">
-                        No materials match your current search or filter criteria.
-                      </p>
-                    </div>
-                  )}
-                </div>
+                {/* Material listings grid with approval actions */}
+                <MaterialGrid 
+                  materials={filteredMaterials}
+                  isAdmin={true}
+                  onApproveClick={handleApproveReject}
+                  onDeleteClick={handleDeleteMaterial}
+                />
               </CardContent>
             </Card>
           </TabsContent>

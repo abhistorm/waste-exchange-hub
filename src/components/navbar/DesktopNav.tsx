@@ -1,7 +1,10 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Home, ShoppingBag, Bot, Recycle, BarChart, DollarSign, MessageCircle, Zap, Lightbulb } from 'lucide-react';
+import { 
+  Home, ShoppingBag, Bot, Recycle, BarChart, 
+  DollarSign, MessageCircle, Lightbulb, Package, Paintbrush 
+} from 'lucide-react';
 import { 
   NavigationMenu,
   NavigationMenuContent,
@@ -33,6 +36,49 @@ const DesktopNav: React.FC = () => {
                 Store
               </Link>
             </NavigationMenuLink>
+          </NavigationMenuItem>
+          
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>
+              <Recycle className="mr-2 h-4 w-4" />
+              Marketplaces
+            </NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid gap-3 p-4 w-[400px] md:w-[500px] grid-cols-2">
+                <li>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      to="/material-marketplace"
+                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                    >
+                      <div className="text-sm font-medium leading-none flex items-center">
+                        <Package className="mr-2 h-4 w-4 text-emerald-600" />
+                        Waste Materials
+                      </div>
+                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        Buy, sell and exchange recyclable waste materials for circular economy.
+                      </p>
+                    </Link>
+                  </NavigationMenuLink>
+                </li>
+                <li>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      to="/artisan-marketplace"
+                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                    >
+                      <div className="text-sm font-medium leading-none flex items-center">
+                        <Paintbrush className="mr-2 h-4 w-4 text-indigo-600" />
+                        Artisan Products
+                      </div>
+                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        Handcrafted items made from recycled and upcycled materials.
+                      </p>
+                    </Link>
+                  </NavigationMenuLink>
+                </li>
+              </ul>
+            </NavigationMenuContent>
           </NavigationMenuItem>
 
           <NavigationMenuItem>

@@ -129,13 +129,23 @@ export const useMaterialMarketplace = () => {
       ...material,
       id: materials.length + 1,
       dateAdded: new Date(),
-      views: 0
+      views: 0,
+      isApproved: true,
     };
     
     setMaterials(prev => [newMaterial, ...prev]);
     setFilteredMaterials(prev => [newMaterial, ...prev]);
     
     return newMaterial;
+  };
+  
+  // Handle deleting a material
+  const handleDeleteMaterial = (materialId: number) => {
+    // In a real app, this would send a delete request to an API
+    // Here we're just updating the local state
+    const updatedMaterials = materials.filter(material => material.id !== materialId);
+    setMaterials(updatedMaterials);
+    setFilteredMaterials(filteredMaterials.filter(material => material.id !== materialId));
   };
 
   return {
@@ -144,6 +154,7 @@ export const useMaterialMarketplace = () => {
     isLoaded,
     handleSearch,
     handleFilterSort,
-    handleAddMaterial
+    handleAddMaterial,
+    handleDeleteMaterial
   };
 };

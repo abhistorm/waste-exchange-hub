@@ -41,8 +41,19 @@ const App = () => (
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/local-rates" element={<LocalRates />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/material-marketplace" element={<MaterialMarketplace />} />
+              
+              {/* Protected Routes */}
+              <Route path="/checkout" element={
+                <ProtectedRoute>
+                  <Checkout />
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/material-marketplace" element={
+                <ProtectedRoute>
+                  <MaterialMarketplace />
+                </ProtectedRoute>
+              } />
               
               {/* AI Solution Routes */}
               <Route path="/ai-assistant" element={<AIAssistant />} />
@@ -50,7 +61,7 @@ const App = () => (
               <Route path="/carbon-calculator" element={<CarbonCalculator />} />
               <Route path="/recycling-tips" element={<RecyclingTips />} />
               
-              {/* Admin Dashboard - Protected Route */}
+              {/* Admin Dashboard - Protected Route with admin only */}
               <Route path="/admin" element={
                 <ProtectedRoute adminOnly={true}>
                   <AdminDashboard />
