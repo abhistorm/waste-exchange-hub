@@ -12,7 +12,7 @@ import ArtisanMarketplace from '@/components/ArtisanMarketplace';
 import { Toaster } from '@/components/ui/toaster';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Recycle, Lightbulb, UserPlus, LogIn } from 'lucide-react';
+import { Recycle, Lightbulb } from 'lucide-react';
 
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -37,33 +37,6 @@ const Index = () => {
         <Hero />
         <MarketplaceSection />
         <ArtisanMarketplace />
-        
-        {/* Auth CTA Section */}
-        <section className="py-12 bg-indigo-50 dark:bg-indigo-950/20">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">
-              Join Our Sustainable Community
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
-              Create an account to buy materials, contact sellers, list your own waste materials,
-              and help build a more sustainable future.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link to="/signup">
-                <Button size="lg" className="gap-2">
-                  <UserPlus className="h-5 w-5" />
-                  Sign Up Now
-                </Button>
-              </Link>
-              <Link to="/signin">
-                <Button size="lg" variant="outline" className="gap-2">
-                  <LogIn className="h-5 w-5" />
-                  Sign In
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
         
         <ProcessSteps />
         <Benefits />

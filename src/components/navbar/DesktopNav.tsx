@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Home, Bot, Recycle, BarChart, 
-  DollarSign, MessageCircle, Lightbulb 
+  DollarSign, MessageCircle, Lightbulb, ShoppingBag
 } from 'lucide-react';
 import { 
   NavigationMenu,
@@ -34,6 +34,15 @@ const DesktopNav: React.FC = () => {
               <Link to="/material-marketplace">
                 <Recycle className="mr-2 h-4 w-4" />
                 Marketplace
+              </Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+              <Link to="/store">
+                <ShoppingBag className="mr-2 h-4 w-4" />
+                Store
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>

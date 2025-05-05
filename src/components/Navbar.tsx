@@ -1,20 +1,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Menu, X, Bot, Shield, ShoppingBag, User } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import Logo from './navbar/Logo';
 import DesktopNav from './navbar/DesktopNav';
 import ActionButtons from './navbar/ActionButtons';
 import MobileMenu from './navbar/MobileMenu';
-import { Link } from 'react-router-dom';
-import { Button } from './ui/button';
-import { useAuth } from '@/contexts/AuthContext';
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [showAIMenu, setShowAIMenu] = useState(false);
-  const { isAuthenticated, isAdmin } = useAuth();
 
   // Handle scroll effect
   useEffect(() => {
@@ -28,19 +23,6 @@ export const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-  
-  // Close AI menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (!target.closest('[data-ai-menu]')) {
-        setShowAIMenu(false);
-      }
-    };
-    
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
   return (
@@ -61,16 +43,6 @@ export const Navbar = () => {
 
         {/* Action Buttons */}
         <ActionButtons />
-
-        {/* Admin Link - Only show for admins */}
-        {isAuthenticated && isAdmin && (
-          <Link to="/admin" className="hidden md:block ml-2">
-            <Button variant="outline" className="flex items-center gap-2 border-amber-600 text-amber-600 hover:bg-amber-50">
-              <Shield className="h-4 w-4" />
-              Admin
-            </Button>
-          </Link>
-        )}
 
         {/* Mobile Menu Button */}
         <button 
