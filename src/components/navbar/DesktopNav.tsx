@@ -12,121 +12,80 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
+import { cn } from '@/lib/utils';
+
+const NavLink = ({ to, children }: { to: string; children: React.ReactNode }) => {
+  return (
+    <Link 
+      to={to} 
+      className="group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 relative"
+    >
+      <span>{children}</span>
+      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+    </Link>
+  );
+};
 
 const DesktopNav: React.FC = () => {
   return (
     <div className="hidden md:flex items-center">
       <NavigationMenu>
-        <NavigationMenuList>
+        <NavigationMenuList className="space-x-1">
           <NavigationMenuItem>
-            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-              <Link to="/">
-                <Home className="mr-2 h-4 w-4" />
-                Home
-              </Link>
-            </NavigationMenuLink>
+            <NavLink to="/">
+              <Home className="mr-2 h-4 w-4" />
+              Home
+            </NavLink>
           </NavigationMenuItem>
           
           <NavigationMenuItem>
-            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-              <Link to="/material-marketplace">
-                <Recycle className="mr-2 h-4 w-4" />
-                Marketplace
-              </Link>
-            </NavigationMenuLink>
+            <NavLink to="/store">
+              <ShoppingBag className="mr-2 h-4 w-4" />
+              Store
+            </NavLink>
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-              <Link to="/store">
-                <ShoppingBag className="mr-2 h-4 w-4" />
-                Store
-              </Link>
-            </NavigationMenuLink>
+            <NavLink to="/material-marketplace">
+              <Recycle className="mr-2 h-4 w-4" />
+              Marketplace
+            </NavLink>
+          </NavigationMenuItem>
+          
+          <NavigationMenuItem>
+            <NavLink to="/local-rates">
+              <DollarSign className="mr-2 h-4 w-4" />
+              Local Rates
+            </NavLink>
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-              <Link to="/local-rates">
-                <DollarSign className="mr-2 h-4 w-4" />
-                Local Rates
-              </Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>
+            <NavigationMenuTrigger className="group">
               <Bot className="mr-2 h-4 w-4" />
-              AI Solutions
+              <span>AI Solutions</span>
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
             </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid gap-3 p-4 w-[400px] md:w-[500px] lg:w-[600px] lg:grid-cols-2">
-                <li>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/ai-assistant"
-                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    >
-                      <div className="text-sm font-medium leading-none flex items-center">
-                        <MessageCircle className="mr-2 h-4 w-4" />
-                        Recycling Assistant
-                      </div>
-                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Chat with our AI to identify and categorize materials for optimal recycling.
-                      </p>
-                    </Link>
-                  </NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/material-analyzer"
-                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    >
-                      <div className="text-sm font-medium leading-none flex items-center">
-                        <BarChart className="mr-2 h-4 w-4" />
-                        Material Analyzer
-                      </div>
-                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        AI-powered material analysis and value estimation for your waste materials.
-                      </p>
-                    </Link>
-                  </NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/carbon-calculator"
-                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    >
-                      <div className="text-sm font-medium leading-none flex items-center">
-                        <Recycle className="mr-2 h-4 w-4" />
-                        Carbon Calculator
-                      </div>
-                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Calculate the environmental impact of your recycling efforts.
-                      </p>
-                    </Link>
-                  </NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/recycling-tips"
-                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    >
-                      <div className="text-sm font-medium leading-none flex items-center">
-                        <Lightbulb className="mr-2 h-4 w-4" />
-                        Smart Recycling Tips
-                      </div>
-                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        AI-generated tips to maximize the value and environmental impact of your recycling.
-                      </p>
-                    </Link>
-                  </NavigationMenuLink>
-                </li>
+              <ul className="grid gap-3 p-6 md:w-[500px] lg:w-[600px] lg:grid-cols-2 rounded-lg bg-white/95 backdrop-blur-sm shadow-lg border border-gray-200">
+                {aiSolutionsItems.map((item) => (
+                  <li key={item.title}>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        to={item.url}
+                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground group"
+                      >
+                        <div className="text-sm font-medium leading-none flex items-center">
+                          <item.icon className="mr-2 h-4 w-4 text-primary group-hover:text-primary/80" />
+                          {item.title}
+                        </div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          {item.description}
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                ))}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
@@ -135,5 +94,32 @@ const DesktopNav: React.FC = () => {
     </div>
   );
 };
+
+const aiSolutionsItems = [
+  {
+    title: "Recycling Assistant",
+    description: "Chat with our AI to identify and categorize materials for optimal recycling.",
+    url: "/ai-assistant",
+    icon: MessageCircle,
+  },
+  {
+    title: "Material Analyzer",
+    description: "AI-powered material analysis and value estimation for your waste materials.",
+    url: "/material-analyzer",
+    icon: BarChart,
+  },
+  {
+    title: "Carbon Calculator",
+    description: "Calculate the environmental impact of your recycling efforts.",
+    url: "/carbon-calculator",
+    icon: Recycle,
+  },
+  {
+    title: "Smart Recycling Tips",
+    description: "AI-generated tips to maximize the value and environmental impact of your recycling.",
+    url: "/recycling-tips",
+    icon: Lightbulb,
+  },
+];
 
 export default DesktopNav;
